@@ -1,0 +1,5 @@
+kin:
+  conf:
+    centerAddress: localhost:8080
+    env: test
+    mirrorFile: data/mirror.properties

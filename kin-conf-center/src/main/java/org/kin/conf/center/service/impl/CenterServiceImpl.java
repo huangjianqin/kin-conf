@@ -1,0 +1,136 @@
+package org.kin.conf.center.service.impl;
+
+import org.kin.conf.center.dao.ConfDao;
+import org.kin.conf.center.dao.ConfMsgDao;
+import org.kin.conf.center.domain.*;
+import org.kin.conf.center.entity.Conf;
+import org.kin.conf.center.entity.ConfMsg;
+import org.kin.framework.actor.Keeper;
+import org.kin.framework.utils.CollectionUtils;
+import org.kin.framework.utils.ExceptionUtils;
+import org.kin.framework.utils.TimeUtils;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.async.DeferredResult;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * @author huangjianqin
+ * @date 2019/7/12
+ */
+@Service
+public class CenterServiceImpl implements InitializingBean, DisposableBean {
+    @Autowired
+    private ConfDao confDao;
+    @Autowired
+    private ConfMsgDao confMsgDao;
+    @Autowired
+    private Duplicatehelper duplicatehelper;
+
+    //副本同步间隔
+    @Value("${kin.conf.duplicateInterval}")
+    private int duplicateInterval;
+
+
+    private List<Integer> readedMsgIds;
+    private long maxChangeTime;
+
+    private Keeper.KeeperStopper msgHandleKeeper;
+    private Keeper.KeeperStopper duplicateKeeper;
+
+    @Override
+    public void destroy() throws Exception {
+        msgHandleKeeper.stopKeeper();
+        duplicateKeeper.stopKeeper();
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        readedMsgIds = Collections.synchronizedList(new ArrayList<>());
+        msgHandleKeeper = Keeper.keep(() -> {
+            List<ConfMsg> confMsgs = confMsgDao.get(readedMsgIds);
+            if (CollectionUtils.isNonEmpty(confMsgs)) {
+                for (ConfMsg confMsg : confMsgs) {
+                    readedMsgIds.add(confMsg.getId());
+
+                    if (confMsg.getChangeTime() > maxChangeTime) {
+                        maxChangeTime = confMsg.getChangeTime();
+                    }
+
+                    //同步到磁盘
+                    duplicatehelper.set(confMsg.getAppName(), confMsg.getEnv(), confMsg.getKey(), confMsg.getValue());
+
+                    List<DeferredResult<CommonResponse<String>>> deferredResults = MonitorData.remove(confMsg.getAppName(), confMsg.getEnv(), confMsg.getKey());
+                    if (CollectionUtils.isNonEmpty(deferredResults)) {
+                        for (DeferredResult<CommonResponse<String>> deferredResult : deferredResults) {
+                            deferredResult.setResult(CommonResponse.success("monitor key update"));
+                        }
+                    }
+                }
+            }
+
+            if (TimeUtils.timestamp() % duplicateInterval == 0) {
+                duplicatehelper.flush();
+                confMsgDao.clean(maxChangeTime);
+                readedMsgIds.clear();
+                maxChangeTime = 0;
+            }
+
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+
+            }
+        });
+
+        duplicateKeeper = Keeper.keep(() -> {
+            try {
+                long sleepTime = duplicateInterval - TimeUtils.timestamp() % duplicateInterval;
+                if (sleepTime > 0 && sleepTime < duplicateInterval) {
+                    TimeUnit.SECONDS.sleep(sleepTime);
+                }
+            } catch (InterruptedException e) {
+
+            }
+
+            try {
+                int offset = 0;
+                int pageSize = Constants.DEFAULT_PAGE_SIZE;
+
+                List<Conf> confs;
+                List<ConfUniqueKey> confUniqueKeys = new ArrayList<>();
+                while (CollectionUtils.isNonEmpty((confs = confDao.list(offset, pageSize)))) {
+                    for (Conf conf : confs) {
+                        //同步到磁盘
+                        duplicatehelper.set(conf.getAppName(), conf.getEnv(), conf.getKey(), conf.getValue());
+
+                        confUniqueKeys.add(new ConfUniqueKey(conf.getAppName(), conf.getEnv(), conf.getKey()));
+                    }
+                    offset += pageSize;
+                }
+
+                //清掉无效配置
+                duplicatehelper.clean(confUniqueKeys);
+            } catch (Exception e) {
+                ExceptionUtils.log(e);
+            }
+
+            try {
+                TimeUnit.SECONDS.sleep(duplicateInterval);
+            } catch (InterruptedException e) {
+
+            }
+        });
+    }
+
+    public String get(String appName, String env, String key) {
+        return duplicatehelper.get(appName, env, key);
+    }
+}
