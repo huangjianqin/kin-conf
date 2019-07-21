@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class ConfListResponse {
     private List<Conf> data = Collections.emptyList();
-    private int totalCount;
+    private long totalCount;
 
     //setter && getter
     public List<Conf> getData() {
@@ -22,11 +22,11 @@ public class ConfListResponse {
         this.data = data;
     }
 
-    public int getTotalCount() {
+    public long getTotalCount() {
         return totalCount;
     }
 
-    public void setTotalCount(int totalCount) {
+    public void setTotalCount(long totalCount) {
         this.totalCount = totalCount;
     }
 }

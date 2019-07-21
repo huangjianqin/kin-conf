@@ -1,7 +1,16 @@
 package org.kin.conf.center.controller;
 
+import org.kin.conf.center.dao.ProjectDao;
+import org.kin.conf.center.domain.CommonResponse;
+import org.kin.conf.center.entity.Project;
+import org.kin.framework.utils.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 /**
  * @author huangjianqin
@@ -10,4 +19,27 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/project")
 public class ProjectController {
+    @Autowired
+    private ProjectDao projectDao;
+
+    @RequestMapping("/add")
+    @ResponseBody
+    public CommonResponse<String> add(HttpServletRequest request, Project project){
+        if(StringUtils.isBlank(project.getAppName())){
+            return CommonResponse.fail("应用名不能为空");
+        }
+
+        if(StringUtils.isBlank(project.getTitle())){
+            return CommonResponse.fail("应用标题不能为空");
+        }
+
+        Optional<Project> optional = projectDao.findById(project.getAppName());
+        if (optional.isPresent()) {
+            return CommonResponse.fail("应用不存在");
+        }
+
+        projectDao.save(project);
+
+        return CommonResponse.success();
+    }
 }

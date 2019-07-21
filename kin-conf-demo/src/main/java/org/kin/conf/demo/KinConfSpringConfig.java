@@ -17,6 +17,8 @@ import org.springframework.context.annotation.Configuration;
 public class KinConfSpringConfig implements InitializingBean {
     private Logger logger = LoggerFactory.getLogger(KinConfSpringConfig.class);
 
+    @Value("${kin.conf.appName}")
+    private String appName;
     @Value("${kin.conf.centerAddress}")
     private String centerAddress;
     @Value("${kin.conf.env}")
@@ -27,7 +29,7 @@ public class KinConfSpringConfig implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        KinConf.init(centerAddress, env, mirrorFile);
+        KinConf.init(appName, centerAddress, env, mirrorFile);
     }
 
     @Bean

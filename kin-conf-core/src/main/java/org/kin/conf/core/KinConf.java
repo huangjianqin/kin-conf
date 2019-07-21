@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2019/7/8
  */
 public class KinConf {
+    private static String appName;
     private static List<String> centerAddresses = new ArrayList<>();
     private static String env;
     private static String mirrorFile;
@@ -29,11 +30,13 @@ public class KinConf {
         });
     }
 
-    public static synchronized void init(String centerAddress, String env, String mirrorFile) {
+    public static synchronized void init(String appName, String centerAddress, String env, String mirrorFile) {
+        Preconditions.checkArgument(StringUtils.isNotBlank(appName), "param appName must not blank");
         Preconditions.checkArgument(StringUtils.isNotBlank(centerAddress), "param centerAddress must not blank");
         Preconditions.checkArgument(StringUtils.isNotBlank(env), "param env must not blank");
         Preconditions.checkArgument(StringUtils.isNotBlank(mirrorFile), "param mirrorFile must not blank");
 
+        KinConf.appName = appName;
         KinConf.centerAddresses.addAll(Arrays.asList(centerAddress.split(",")));
         KinConf.env = env;
         boolean needRefreshCache = false;
@@ -93,6 +96,10 @@ public class KinConf {
     }
 
     //-----------------------------------------------------------------------------------------------------------
+    public static String getAppName() {
+        return appName;
+    }
+
     public static List<String> getCenterAddresses() {
         return centerAddresses;
     }

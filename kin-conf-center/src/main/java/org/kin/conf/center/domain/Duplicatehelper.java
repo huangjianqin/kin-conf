@@ -55,6 +55,9 @@ public class Duplicatehelper implements DisposableBean {
         try {
             return cache.get(cacheUniqueKey, () -> {
                 Properties properties = PropertiesUtils.loadFileProperties(cacheUniqueKey);
+                if(properties == null){
+                    properties = new Properties();
+                }
                 return properties;
             });
         } catch (ExecutionException e) {
@@ -81,7 +84,7 @@ public class Duplicatehelper implements DisposableBean {
         ListMultimap<String, String> cacheUniqueKey2Confs = MultimapBuilder.ListMultimapBuilder.hashKeys().arrayListValues().build();
         for (ConfUniqueKey confUniqueKey : confUniqueKeys) {
             String cacheUniqueKey = parsePath(confUniqueKey.getAppName(), confUniqueKey.getEnv());
-            cacheUniqueKey2Confs.put(cacheUniqueKey, confUniqueKey.getKey());
+            cacheUniqueKey2Confs.put(cacheUniqueKey, confUniqueKey.getKeyV());
         }
 
         for (Map.Entry<String, Collection<String>> entry : cacheUniqueKey2Confs.asMap().entrySet()) {

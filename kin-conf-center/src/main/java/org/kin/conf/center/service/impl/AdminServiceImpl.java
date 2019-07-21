@@ -7,6 +7,9 @@ import org.kin.conf.center.service.AdminService;
 import org.kin.framework.utils.CollectionUtils;
 import org.kin.framework.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
@@ -34,11 +37,19 @@ public class AdminServiceImpl implements AdminService {
     private CenterServiceImpl centerServiceImpl;
 
     @Override
-    public ConfListResponse listConf(int offset, String env, String appName, String key) {
+    public ConfListResponse listConf(int offset, String appName, String env) {
         ConfListResponse resp = new ConfListResponse();
-        if (offset >= 0 && StringUtils.isNotBlank(appName) && StringUtils.isNotBlank(key) && StringUtils.isNotBlank(env)) {
-            int totalCount = confDao.count(env, appName, key);
-            List<Conf> confs = confDao.list(offset, Constants.DEFAULT_PAGE_SIZE, env, appName, key);
+        if (offset >= 0 && StringUtils.isNotBlank(appName) && StringUtils.isNotBlank(env)) {
+            long totalCount = confDao.count();
+
+            Conf conf = new Conf();
+            conf.setAppName(appName);
+            conf.setEnv(env);
+
+            Example<Conf> example = Example.of(conf);
+            Pageable pageable = PageRequest.of(offset, Constants.DEFAULT_PAGE_SIZE);
+
+            List<Conf> confs = confDao.findAll(example, pageable).getContent();
 
             resp.setTotalCount(totalCount);
             if (CollectionUtils.isNonEmpty(confs)) {
@@ -53,11 +64,11 @@ public class AdminServiceImpl implements AdminService {
         ConfMsg confMsg = new ConfMsg();
         confMsg.setAppName(appName);
         confMsg.setEnv(env);
-        confMsg.setKey(key);
+        confMsg.setKeyV(key);
         confMsg.setValue(value);
         confMsg.setChangeTime(System.currentTimeMillis());
 
-        confMsgDao.insert(confMsg);
+        confMsgDao.save(confMsg);
     }
 
     @Override
@@ -74,29 +85,26 @@ public class AdminServiceImpl implements AdminService {
             return CommonResponse.fail("配置环境不能为空");
         }
 
-        Conf conf = confDao.get(new ConfUniqueKey(appName, env, key));
+        Conf conf = confDao.findById(new ConfUniqueKey(appName, env, key)).get();
         if (conf == null) {
             return CommonResponse.fail("配置不存在");
         }
         //TODO 校验权限
 
-        if (confDao.delete(conf)) {
-            return CommonResponse.fail("删除配置异常");
-        }
-
+        confDao.delete(conf);
         //log
         //TODO operator
-        ConfLog confLog = ConfLog.logDelete(conf.getEnv(), conf.getKey(), conf.getAppName(), conf.getDesc(), conf.getValue(), "");
-        confLogDao.insert(confLog);
+        ConfLog confLog = ConfLog.logDelete(conf.getEnv(), conf.getKeyV(), conf.getAppName(), conf.getDescription(), conf.getValue(), "");
+        confLogDao.save(confLog);
 
-        sendConfMsg(conf.getAppName(), conf.getEnv(), conf.getKey(), null);
+        sendConfMsg(conf.getAppName(), conf.getEnv(), conf.getKeyV(), null);
 
         return CommonResponse.success();
     }
 
     @Override
     public CommonResponse<String> add(Conf conf) {
-        if (StringUtils.isBlank(conf.getDesc())) {
+        if (StringUtils.isBlank(conf.getDescription())) {
             return CommonResponse.fail("描述不能为空");
         }
 
@@ -106,7 +114,7 @@ public class AdminServiceImpl implements AdminService {
 
         //TODO 校验权限
 
-        Project project = projectDao.get(conf.getAppName());
+        Project project = projectDao.findById(conf.getAppName()).orElse(null);
         if (project == null) {
             return CommonResponse.fail("应用不存在");
         }
@@ -115,17 +123,17 @@ public class AdminServiceImpl implements AdminService {
             return CommonResponse.fail("环境不能为空");
         }
 
-        Env env = envDao.get(conf.getEnv());
+        Env env = envDao.findById(conf.getEnv()).orElse(null);
         if (env == null) {
             return CommonResponse.fail("环境不存在");
         }
 
-        if (StringUtils.isBlank(conf.getKey())) {
+        if (StringUtils.isBlank(conf.getKeyV())) {
             return CommonResponse.fail("key不能为空");
         }
-        conf.setKey(conf.getKey().trim());
+        conf.setKeyV(conf.getKeyV().trim());
 
-        Conf dbConf = confDao.get(new ConfUniqueKey(conf.getAppName(), conf.getEnv(), conf.getKey()));
+        Conf dbConf = confDao.findById(new ConfUniqueKey(conf.getAppName(), conf.getEnv(), conf.getKeyV())).orElse(null);
         if (dbConf != null) {
             return CommonResponse.fail("配置已存在, 不能重复添加");
         }
@@ -134,31 +142,31 @@ public class AdminServiceImpl implements AdminService {
             conf.setValue("");
         }
 
-        if (confDao.insert(conf)) {
+        if (confDao.save(conf) == null) {
             return CommonResponse.fail("添加配置异常");
         }
 
         //log
         //TODO operator
-        ConfLog confLog = ConfLog.logAdd(conf.getEnv(), conf.getKey(), conf.getAppName(), conf.getDesc(), conf.getValue(), "");
-        confLogDao.insert(confLog);
+        ConfLog confLog = ConfLog.logAdd(conf.getEnv(), conf.getKeyV(), conf.getAppName(), conf.getDescription(), conf.getValue(), "");
+        confLogDao.save(confLog);
 
-        sendConfMsg(conf.getAppName(), conf.getEnv(), conf.getKey(), conf.getValue());
+        sendConfMsg(conf.getAppName(), conf.getEnv(), conf.getKeyV(), conf.getValue());
 
         return CommonResponse.success();
     }
 
     @Override
     public CommonResponse<String> update(Conf conf) {
-        if (StringUtils.isBlank(conf.getDesc())) {
+        if (StringUtils.isBlank(conf.getDescription())) {
             return CommonResponse.fail("描述不能为空");
         }
 
-        if (StringUtils.isBlank(conf.getKey())) {
+        if (StringUtils.isBlank(conf.getKeyV())) {
             return CommonResponse.fail("key不能为空");
         }
 
-        Conf dbConf = confDao.get(new ConfUniqueKey(conf.getAppName(), conf.getEnv(), conf.getKey()));
+        Conf dbConf = confDao.findById(new ConfUniqueKey(conf.getAppName(), conf.getEnv(), conf.getKeyV())).orElse(null);
         if (dbConf == null) {
             return CommonResponse.fail("配置不存在");
         }
@@ -167,18 +175,18 @@ public class AdminServiceImpl implements AdminService {
             conf.setValue("");
         }
 
-        dbConf.setDesc(conf.getDesc());
+        dbConf.setDescription(conf.getDescription());
         dbConf.setValue(conf.getValue());
-        if (confDao.update(dbConf)) {
+        if (confDao.save(dbConf) == null) {
             return CommonResponse.fail("更新配置异常");
         }
 
         //log
         //TODO operator
-        ConfLog confLog = ConfLog.logUpdate(conf.getEnv(), conf.getKey(), conf.getAppName(), conf.getDesc(), conf.getValue(), "");
-        confLogDao.insert(confLog);
+        ConfLog confLog = ConfLog.logUpdate(conf.getEnv(), conf.getKeyV(), conf.getAppName(), conf.getDescription(), conf.getValue(), "");
+        confLogDao.save(confLog);
 
-        sendConfMsg(dbConf.getAppName(), dbConf.getEnv(), dbConf.getKey(), dbConf.getValue());
+        sendConfMsg(dbConf.getAppName(), dbConf.getEnv(), dbConf.getKeyV(), dbConf.getValue());
 
         return CommonResponse.success();
     }

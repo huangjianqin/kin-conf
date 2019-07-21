@@ -23,7 +23,7 @@ public class User implements Serializable {
     @Column(columnDefinition = "tinyint(4) NOT NULL DEFAULT '0' COMMENT '权限：0-普通用户、1-管理员'")
     private int permission;
     @Column(columnDefinition = "varchar(1000) DEFAULT NULL COMMENT '权限配置数据'")
-    private String permission_data;
+    private String permissionData;
 
     //setter && getter
     public String getAccount() {
@@ -58,11 +58,11 @@ public class User implements Serializable {
         this.permission = permission;
     }
 
-    public String getPermission_data() {
-        return permission_data;
+    public String getPermissionData() {
+        return permissionData;
     }
 
-    public void setPermission_data(String permission_data) {
-        this.permission_data = permission_data;
+    public void setPermissionData(String permissionData) {
+        this.permissionData = permissionData;
     }
 }

@@ -21,16 +21,16 @@ public class ConfLog implements Serializable {
     @Column(columnDefinition = "varchar(100) NOT NULL COMMENT 'Env'")
     private String env;
     @Column(columnDefinition = "varchar(200) NOT NULL COMMENT '配置Key'")
-    private String key;
+    private String keyV;
     @Column(columnDefinition = "varchar(100) NOT NULL COMMENT '所属项目AppName'")
     private String appName;
     @Column(columnDefinition = "varchar(100) NOT NULL COMMENT '配置描述'")
-    private String desc;
+    private String description;
     @Column(columnDefinition = "varchar(2000) DEFAULT NULL COMMENT '配置Value'")
     private String value;
     @Column(columnDefinition = "bigint(11) NOT NULL COMMENT '操作时间'")
     private long logTime;
-    @Column(columnDefinition = "varchar(100) NOT NULL COMMENT '操作人")
+    @Column(columnDefinition = "varchar(100) NOT NULL COMMENT '操作人'")
     private String operator;
     @Column(columnDefinition = "tinyint(2) NOT NULL COMMENT '操作类型'")
     private int operateType;
@@ -38,11 +38,11 @@ public class ConfLog implements Serializable {
     public ConfLog() {
     }
 
-    public ConfLog(String env, String key, String appName, String desc, String value, long logTime, String operator, int operateType) {
+    public ConfLog(String env, String keyV, String appName, String description, String value, long logTime, String operator, int operateType) {
         this.env = env;
-        this.key = key;
+        this.keyV = keyV;
         this.appName = appName;
-        this.desc = desc;
+        this.description = description;
         this.value = value;
         this.logTime = logTime;
         this.operator = operator;
@@ -78,12 +78,12 @@ public class ConfLog implements Serializable {
         this.env = env;
     }
 
-    public String getKey() {
-        return key;
+    public String getKeyV() {
+        return keyV;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setKeyV(String keyV) {
+        this.keyV = keyV;
     }
 
     public String getAppName() {
@@ -94,12 +94,12 @@ public class ConfLog implements Serializable {
         this.appName = appName;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getValue() {

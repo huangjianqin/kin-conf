@@ -9,15 +9,15 @@ import java.io.Serializable;
 public class ConfUniqueKey implements Serializable {
     private String appName;
     private String env;
-    private String key;
+    private String keyV;
 
     public ConfUniqueKey() {
     }
 
-    public ConfUniqueKey(String appName, String env, String key) {
+    public ConfUniqueKey(String appName, String env, String keyV) {
         this.appName = appName;
         this.env = env;
-        this.key = key;
+        this.keyV = keyV;
     }
 
     //setter && getter
@@ -37,11 +37,31 @@ public class ConfUniqueKey implements Serializable {
         this.env = env;
     }
 
-    public String getKey() {
-        return key;
+    public String getKeyV() {
+        return keyV;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setKeyV(String keyV) {
+        this.keyV = keyV;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ConfUniqueKey that = (ConfUniqueKey) o;
+
+        if (!appName.equals(that.appName)) return false;
+        if (!env.equals(that.env)) return false;
+        return keyV.equals(that.keyV);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = appName.hashCode();
+        result = 31 * result + env.hashCode();
+        result = 31 * result + keyV.hashCode();
+        return result;
     }
 }

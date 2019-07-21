@@ -17,9 +17,9 @@ public class Env implements Serializable {
     @Column(columnDefinition = "varchar(100) NOT NULL COMMENT 'Env'")
     private String env;
     @Column(columnDefinition = "varchar(100) NOT NULL COMMENT '环境描述'")
-    private String desc;
+    private String description;
     @Column(columnDefinition = "tinyint(4) NOT NULL DEFAULT '0' COMMENT '显示排序'")
-    private int order;
+    private int torder;
 
 
     //setter && getter
@@ -31,19 +31,19 @@ public class Env implements Serializable {
         this.env = env;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public int getOrder() {
-        return order;
+    public int getTorder() {
+        return torder;
     }
 
-    public void setOrder(int order) {
-        this.order = order;
+    public void setTorder(int torder) {
+        this.torder = torder;
     }
 }

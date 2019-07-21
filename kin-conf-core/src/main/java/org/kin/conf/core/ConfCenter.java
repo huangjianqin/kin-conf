@@ -23,6 +23,7 @@ class ConfCenter {
     private static final String GET_URL = "/conf/get";
     private static final String MONITOR_URL = "/conf/monitor";
 
+    private static final String REQ_APPNAME = "appName";
     private static final String REQ_ENV = "env";
     private static final String REQ_KEYS = "keys";
 
@@ -43,6 +44,7 @@ class ConfCenter {
         for (String centerAddress : KinConf.getCenterAddresses()) {
             String requestUrl = centerAddress + GET_URL;
             Map<String, Object> params = new HashMap<>();
+            params.put(REQ_APPNAME, KinConf.getAppName());
             params.put(REQ_ENV, KinConf.getEnv());
             params.put(REQ_KEYS, keys);
 
@@ -64,6 +66,7 @@ class ConfCenter {
         for (String centerAddress : KinConf.getCenterAddresses()) {
             String requestUrl = centerAddress + MONITOR_URL;
             Map<String, Object> params = new HashMap<>();
+            params.put(REQ_APPNAME, KinConf.getAppName());
             params.put(REQ_ENV, KinConf.getEnv());
             params.put(REQ_KEYS, keys);
 

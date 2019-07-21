@@ -13,6 +13,8 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
@@ -55,7 +57,15 @@ public class CenterServiceImpl implements InitializingBean, DisposableBean {
     public void afterPropertiesSet() throws Exception {
         readedMsgIds = Collections.synchronizedList(new ArrayList<>());
         msgHandleKeeper = Keeper.keep(() -> {
-            List<ConfMsg> confMsgs = confMsgDao.get(readedMsgIds);
+            List<ConfMsg> confMsgs;
+            if(CollectionUtils.isNonEmpty(readedMsgIds)){
+                confMsgs = confMsgDao.get(readedMsgIds);
+            }
+            else{
+                Sort sort = Sort.by("changeTime");
+                confMsgs = confMsgDao.findAll(sort);
+            }
+
             if (CollectionUtils.isNonEmpty(confMsgs)) {
                 for (ConfMsg confMsg : confMsgs) {
                     readedMsgIds.add(confMsg.getId());
@@ -65,9 +75,9 @@ public class CenterServiceImpl implements InitializingBean, DisposableBean {
                     }
 
                     //同步到磁盘
-                    duplicatehelper.set(confMsg.getAppName(), confMsg.getEnv(), confMsg.getKey(), confMsg.getValue());
+                    duplicatehelper.set(confMsg.getAppName(), confMsg.getEnv(), confMsg.getKeyV(), confMsg.getValue());
 
-                    List<DeferredResult<CommonResponse<String>>> deferredResults = MonitorData.remove(confMsg.getAppName(), confMsg.getEnv(), confMsg.getKey());
+                    List<DeferredResult<CommonResponse<String>>> deferredResults = MonitorData.remove(confMsg.getAppName(), confMsg.getEnv(), confMsg.getKeyV());
                     if (CollectionUtils.isNonEmpty(deferredResults)) {
                         for (DeferredResult<CommonResponse<String>> deferredResult : deferredResults) {
                             deferredResult.setResult(CommonResponse.success("monitor key update"));
@@ -106,12 +116,12 @@ public class CenterServiceImpl implements InitializingBean, DisposableBean {
 
                 List<Conf> confs;
                 List<ConfUniqueKey> confUniqueKeys = new ArrayList<>();
-                while (CollectionUtils.isNonEmpty((confs = confDao.list(offset, pageSize)))) {
+                while (CollectionUtils.isNonEmpty((confs = confDao.findAll(PageRequest.of(offset, pageSize)).getContent()))) {
                     for (Conf conf : confs) {
                         //同步到磁盘
-                        duplicatehelper.set(conf.getAppName(), conf.getEnv(), conf.getKey(), conf.getValue());
+                        duplicatehelper.set(conf.getAppName(), conf.getEnv(), conf.getKeyV(), conf.getValue());
 
-                        confUniqueKeys.add(new ConfUniqueKey(conf.getAppName(), conf.getEnv(), conf.getKey()));
+                        confUniqueKeys.add(new ConfUniqueKey(conf.getAppName(), conf.getEnv(), conf.getKeyV()));
                     }
                     offset += pageSize;
                 }

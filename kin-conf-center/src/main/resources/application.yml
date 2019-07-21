@@ -1,6 +1,6 @@
 kin:
   conf:
-    duplicateInterval: 10000
+    duplicateInterval: 60
     duplicatePath: data/duplicate/
 
 server:
@@ -17,7 +17,7 @@ spring:
 
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://localhost:3306/medical_system?useUnicode=true&autoReconnect=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+    url: jdbc:mysql://localhost:3306/kin_conf_center?useUnicode=true&autoReconnect=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
     username: root
     password: 123456
     driver-class-name: com.mysql.jdbc.Driver
@@ -38,12 +38,15 @@ spring:
     filters: stat,wall,log4j
     logSlowSql: true
     validation-query: SELECT 1
+    # 数据库有表就不执行
     # 可以定义你的建库文件
     schema: classpath:schema.sql
-    # 可以定义你的数据文件s
+    # 可以定义你的数据文件
     data: classpath:data.sql
     # 有了错误是否继续运行
 #    continueOnError: false
+    # 每次都初始化
+#    initialization-mode: always
 
 #=====================jpa config================================
   jpa:
@@ -52,9 +55,16 @@ spring:
     hibernate:
       ddl-auto: none
       # Naming strategy
-      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+      # 会把驼峰写法用_拆分
+      # naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+      naming:
+        # 会把驼峰写法用_拆分
+        # physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+        # 直接映射
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      database-platform: org.hibernate.dialect.MySQL5InnoDBDialect  #不加这句则默认为myisam引擎
     #打印sql语句
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5Dialect
@@ -72,7 +82,7 @@ spring:
 
   cache:
     ehcache:
-      config: ehcache.xml
+      config: classpath:ehcache.xml
 
 #logging.level.root: trace
 #logging.level.org.springframework.web: debug

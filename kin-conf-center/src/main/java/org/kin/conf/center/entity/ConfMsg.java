@@ -21,7 +21,7 @@ public class ConfMsg implements Serializable {
     @Column(columnDefinition = "varchar(100) NOT NULL COMMENT 'Env'")
     private String env;
     @Column(columnDefinition = "varchar(200) NOT NULL COMMENT '配置Key'")
-    private String key;
+    private String keyV;
     @Column(columnDefinition = "varchar(2000) DEFAULT NULL COMMENT '配置Value'")
     private String value;
 
@@ -58,12 +58,12 @@ public class ConfMsg implements Serializable {
         this.env = env;
     }
 
-    public String getKey() {
-        return key;
+    public String getKeyV() {
+        return keyV;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setKeyV(String keyV) {
+        this.keyV = keyV;
     }
 
     public String getValue() {

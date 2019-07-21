@@ -13,7 +13,7 @@ import java.util.Map;
  * @date 2019/7/12
  */
 public interface AdminService {
-    ConfListResponse listConf(int offset, String env, String appName, String key);
+    ConfListResponse listConf(int offset, String appName, String env);
 
     CommonResponse<String> delete(String appName, String env, String key);
 
