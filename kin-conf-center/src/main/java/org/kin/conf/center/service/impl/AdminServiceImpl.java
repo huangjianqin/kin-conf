@@ -72,7 +72,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public CommonResponse<String> delete(String appName, String env, String key) {
+    public CommonResponse<String> delete(User user, String appName, String env, String key) {
         if (StringUtils.isBlank(appName)) {
             return CommonResponse.fail("应用不能为空");
         }
@@ -85,16 +85,19 @@ public class AdminServiceImpl implements AdminService {
             return CommonResponse.fail("配置环境不能为空");
         }
 
+        //校验权限
+        if (!user.hasPermission(appName, env)) {
+            return CommonResponse.fail("没有权限删除该配置");
+        }
+
         Conf conf = confDao.findById(new ConfUniqueKey(appName, env, key)).get();
         if (conf == null) {
             return CommonResponse.fail("配置不存在");
         }
-        //TODO 校验权限
 
         confDao.delete(conf);
         //log
-        //TODO operator
-        ConfLog confLog = ConfLog.logDelete(conf.getEnv(), conf.getKeyV(), conf.getAppName(), conf.getDescription(), conf.getValue(), "");
+        ConfLog confLog = ConfLog.logDelete(conf.getEnv(), conf.getKeyV(), conf.getAppName(), conf.getDescription(), conf.getValue(), user.getAccount());
         confLogDao.save(confLog);
 
         sendConfMsg(conf.getAppName(), conf.getEnv(), conf.getKeyV(), null);
@@ -103,7 +106,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public CommonResponse<String> add(Conf conf) {
+    public CommonResponse<String> add(User user, Conf conf) {
         if (StringUtils.isBlank(conf.getDescription())) {
             return CommonResponse.fail("描述不能为空");
         }
@@ -111,8 +114,6 @@ public class AdminServiceImpl implements AdminService {
         if (StringUtils.isBlank(conf.getAppName())) {
             return CommonResponse.fail("应用名不能为空");
         }
-
-        //TODO 校验权限
 
         Project project = projectDao.findById(conf.getAppName()).orElse(null);
         if (project == null) {
@@ -126,6 +127,11 @@ public class AdminServiceImpl implements AdminService {
         Env env = envDao.findById(conf.getEnv()).orElse(null);
         if (env == null) {
             return CommonResponse.fail("环境不存在");
+        }
+
+        //校验权限
+        if (!user.hasPermission(conf.getAppName(), conf.getEnv())) {
+            return CommonResponse.fail("没有权限添加配置");
         }
 
         if (StringUtils.isBlank(conf.getKeyV())) {
@@ -147,8 +153,7 @@ public class AdminServiceImpl implements AdminService {
         }
 
         //log
-        //TODO operator
-        ConfLog confLog = ConfLog.logAdd(conf.getEnv(), conf.getKeyV(), conf.getAppName(), conf.getDescription(), conf.getValue(), "");
+        ConfLog confLog = ConfLog.logAdd(conf.getEnv(), conf.getKeyV(), conf.getAppName(), conf.getDescription(), conf.getValue(), user.getAccount());
         confLogDao.save(confLog);
 
         sendConfMsg(conf.getAppName(), conf.getEnv(), conf.getKeyV(), conf.getValue());
@@ -157,13 +162,26 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public CommonResponse<String> update(Conf conf) {
+    public CommonResponse<String> update(User user, Conf conf) {
         if (StringUtils.isBlank(conf.getDescription())) {
             return CommonResponse.fail("描述不能为空");
         }
 
         if (StringUtils.isBlank(conf.getKeyV())) {
             return CommonResponse.fail("key不能为空");
+        }
+
+        if (StringUtils.isBlank(conf.getAppName())) {
+            return CommonResponse.fail("应用不能为空");
+        }
+
+        if (StringUtils.isBlank(conf.getEnv())) {
+            return CommonResponse.fail("配置环境不能为空");
+        }
+
+        //校验权限
+        if (!user.hasPermission(conf.getAppName(), conf.getEnv())) {
+            return CommonResponse.fail("没有权限删除该配置");
         }
 
         Conf dbConf = confDao.findById(new ConfUniqueKey(conf.getAppName(), conf.getEnv(), conf.getKeyV())).orElse(null);
@@ -182,8 +200,7 @@ public class AdminServiceImpl implements AdminService {
         }
 
         //log
-        //TODO operator
-        ConfLog confLog = ConfLog.logUpdate(conf.getEnv(), conf.getKeyV(), conf.getAppName(), conf.getDescription(), conf.getValue(), "");
+        ConfLog confLog = ConfLog.logUpdate(conf.getEnv(), conf.getKeyV(), conf.getAppName(), conf.getDescription(), conf.getValue(), user.getAccount());
         confLogDao.save(confLog);
 
         sendConfMsg(dbConf.getAppName(), dbConf.getEnv(), dbConf.getKeyV(), dbConf.getValue());

@@ -55,7 +55,7 @@ public class Duplicatehelper implements DisposableBean {
         try {
             return cache.get(cacheUniqueKey, () -> {
                 Properties properties = PropertiesUtils.loadFileProperties(cacheUniqueKey);
-                if(properties == null){
+                if (properties == null) {
                     properties = new Properties();
                 }
                 return properties;

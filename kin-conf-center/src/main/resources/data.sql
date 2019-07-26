@@ -1,1 +1,1 @@
-insert into hibernate_sequence values ( 0 );
+INSERT INTO hibernate_sequence VALUES (0);

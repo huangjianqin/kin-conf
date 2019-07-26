@@ -1,10 +1,15 @@
 package org.kin.conf.center.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.kin.conf.center.converter.JpaPermissionStrConverter;
+import org.kin.conf.center.domain.Constants;
+import org.kin.framework.utils.CollectionUtils;
+
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author huangjianqin
@@ -23,7 +28,53 @@ public class User implements Serializable {
     @Column(columnDefinition = "tinyint(4) NOT NULL DEFAULT '0' COMMENT '权限：0-普通用户、1-管理员'")
     private int permission;
     @Column(columnDefinition = "varchar(1000) DEFAULT NULL COMMENT '权限配置数据'")
-    private String permissionData;
+    @Convert(converter = JpaPermissionStrConverter.class)
+    //格式"appname#env#env01,appname#env02"
+    private Map<String, List<String>> permissionData = new HashMap<>();
+
+    public boolean isUser() {
+        return permission == Constants.USER;
+    }
+
+    public boolean isAdmin() {
+        return permission == Constants.ADMIN;
+    }
+
+    public boolean hasPermission(String appName, String env) {
+        List<String> envs;
+        if (permissionData.containsKey(appName) &&
+                CollectionUtils.isNonEmpty((envs = permissionData.get(appName))) &&
+                envs.contains(env)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean addOrChangePermission(Map<String, List<String>> appName2Envs) {
+        boolean change = false;
+        for (Map.Entry<String, List<String>> entry : appName2Envs.entrySet()) {
+            String appName = entry.getKey();
+            List<String> envs = entry.getValue();
+            if (CollectionUtils.isNonEmpty(envs)) {
+                List<String> dbEnvs = permissionData.get(appName);
+                if (CollectionUtils.isEmpty(dbEnvs)) {
+                    dbEnvs = new ArrayList<>(envs);
+                } else {
+                    for (String env : envs) {
+                        if (!dbEnvs.contains(env)) {
+                            dbEnvs.add(env);
+                        }
+                    }
+                }
+
+                permissionData.put(appName, dbEnvs);
+                change = true;
+            }
+        }
+
+        return change;
+    }
 
     //setter && getter
     public String getAccount() {
@@ -58,11 +109,11 @@ public class User implements Serializable {
         this.permission = permission;
     }
 
-    public String getPermissionData() {
+    public Map<String, List<String>> getPermissionData() {
         return permissionData;
     }
 
-    public void setPermissionData(String permissionData) {
+    public void setPermissionData(Map<String, List<String>> permissionData) {
         this.permissionData = permissionData;
     }
 }

@@ -3,6 +3,7 @@ package org.kin.conf.center.controller;
 import org.kin.conf.center.domain.CommonResponse;
 import org.kin.conf.center.domain.ConfListResponse;
 import org.kin.conf.center.domain.FindConfParams;
+import org.kin.conf.center.domain.Permission;
 import org.kin.conf.center.entity.Conf;
 import org.kin.conf.center.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,28 +29,32 @@ public class ConfController {
 
     @RequestMapping("/list")
     @ResponseBody
+    @Permission
     public ConfListResponse list(HttpServletRequest request,
-                                     int page,
-                                     String appName) {
+                                 int page,
+                                 String appName) {
         return adminService.listConf(page, appName, env);
     }
 
     @RequestMapping("/delete")
     @ResponseBody
-    public CommonResponse<String> delete(HttpServletRequest request, String appName, String key){
+    @Permission
+    public CommonResponse<String> delete(HttpServletRequest request, String appName, String key) {
         return adminService.delete(appName, env, key);
     }
 
     @RequestMapping("/add")
     @ResponseBody
-    public CommonResponse<String> add(HttpServletRequest request, Conf conf){
+    @Permission
+    public CommonResponse<String> add(HttpServletRequest request, Conf conf) {
         conf.setEnv(env);
         return adminService.add(conf);
     }
 
     @RequestMapping("/update")
     @ResponseBody
-    public CommonResponse<String> update(HttpServletRequest request, Conf conf){
+    @Permission
+    public CommonResponse<String> update(HttpServletRequest request, Conf conf) {
         conf.setEnv(env);
         return adminService.update(conf);
     }
@@ -58,7 +63,7 @@ public class ConfController {
     // ---------------------- rest api ----------------------
     @RequestMapping("/find")
     @ResponseBody
-    public CommonResponse<Map<String, String>> getConfs(@RequestBody FindConfParams params){
+    public CommonResponse<Map<String, String>> getConfs(@RequestBody FindConfParams params) {
         return adminService.getConfs(params.getAppName(), params.getEnv(), params.getKeys());
     }
 

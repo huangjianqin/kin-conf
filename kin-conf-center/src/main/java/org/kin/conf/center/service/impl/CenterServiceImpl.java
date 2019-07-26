@@ -58,10 +58,9 @@ public class CenterServiceImpl implements InitializingBean, DisposableBean {
         readedMsgIds = Collections.synchronizedList(new ArrayList<>());
         msgHandleKeeper = Keeper.keep(() -> {
             List<ConfMsg> confMsgs;
-            if(CollectionUtils.isNonEmpty(readedMsgIds)){
+            if (CollectionUtils.isNonEmpty(readedMsgIds)) {
                 confMsgs = confMsgDao.get(readedMsgIds);
-            }
-            else{
+            } else {
                 Sort sort = Sort.by("changeTime");
                 confMsgs = confMsgDao.findAll(sort);
             }
