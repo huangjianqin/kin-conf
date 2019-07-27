@@ -1,6 +1,6 @@
 package org.kin.conf.demo;
 
-import org.kin.conf.core.KinConf;
+import org.kin.conf.client.KinConf;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;

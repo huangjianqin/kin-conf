@@ -1,4 +1,4 @@
-package org.kin.conf.core.domain;
+package org.kin.conf.client.domain;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

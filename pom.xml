@@ -9,7 +9,7 @@
     <packaging>pom</packaging>
     <version>0.1.0.0</version>
     <modules>
-        <module>kin-conf-core</module>
+        <module>kin-conf-client</module>
         <module>kin-conf-center</module>
         <module>kin-conf-demo</module>
     </modules>

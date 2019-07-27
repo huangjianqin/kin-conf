@@ -6,6 +6,7 @@ import org.kin.conf.center.domain.FindConfParams;
 import org.kin.conf.center.domain.Permission;
 import org.kin.conf.center.entity.Conf;
 import org.kin.conf.center.service.AdminService;
+import org.kin.conf.center.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,10 @@ import java.util.Map;
 public class ConfController {
     @Autowired
     private AdminService adminService;
+
+    @Autowired
+    private UserService userService;
+
     private static String env = "test";
 
     @RequestMapping("/list")
@@ -40,7 +45,7 @@ public class ConfController {
     @ResponseBody
     @Permission
     public CommonResponse<String> delete(HttpServletRequest request, String appName, String key) {
-        return adminService.delete(appName, env, key);
+        return adminService.delete(userService.isLogin(request), appName, env, key);
     }
 
     @RequestMapping("/add")
@@ -48,7 +53,7 @@ public class ConfController {
     @Permission
     public CommonResponse<String> add(HttpServletRequest request, Conf conf) {
         conf.setEnv(env);
-        return adminService.add(conf);
+        return adminService.add(userService.isLogin(request), conf);
     }
 
     @RequestMapping("/update")
@@ -56,7 +61,7 @@ public class ConfController {
     @Permission
     public CommonResponse<String> update(HttpServletRequest request, Conf conf) {
         conf.setEnv(env);
-        return adminService.update(conf);
+        return adminService.update(userService.isLogin(request), conf);
     }
 
 

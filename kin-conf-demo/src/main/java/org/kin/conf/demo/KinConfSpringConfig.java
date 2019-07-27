@@ -1,7 +1,7 @@
 package org.kin.conf.demo;
 
-import org.kin.conf.core.KinConf;
-import org.kin.conf.core.spring.BeanConfHandler;
+import org.kin.conf.client.KinConf;
+import org.kin.conf.client.spring.BeanConfHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;

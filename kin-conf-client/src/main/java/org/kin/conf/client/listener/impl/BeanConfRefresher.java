@@ -1,8 +1,8 @@
-package org.kin.conf.core.listener.impl;
+package org.kin.conf.client.listener.impl;
 
-import org.kin.conf.core.domain.BeanConfWrapper;
-import org.kin.conf.core.listener.ConfChangeListener;
-import org.kin.conf.core.utils.BeanConfRefreshHelper;
+import org.kin.conf.client.domain.BeanConfWrapper;
+import org.kin.conf.client.listener.ConfChangeListener;
+import org.kin.conf.client.utils.BeanConfRefreshHelper;
 import org.kin.framework.utils.CollectionUtils;
 import org.springframework.context.ApplicationContext;
 

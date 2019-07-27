@@ -1,10 +1,10 @@
-package org.kin.conf.core.spring;
+package org.kin.conf.client.spring;
 
-import org.kin.conf.core.KinConf;
-import org.kin.conf.core.domain.BeanConfWrapper;
-import org.kin.conf.core.domain.Conf;
-import org.kin.conf.core.listener.impl.BeanConfRefresher;
-import org.kin.conf.core.utils.BeanConfRefreshHelper;
+import org.kin.conf.client.KinConf;
+import org.kin.conf.client.domain.BeanConfWrapper;
+import org.kin.conf.client.domain.Conf;
+import org.kin.conf.client.listener.impl.BeanConfRefresher;
+import org.kin.conf.client.utils.BeanConfRefreshHelper;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessorAdapter;
 import org.springframework.context.ApplicationContext;

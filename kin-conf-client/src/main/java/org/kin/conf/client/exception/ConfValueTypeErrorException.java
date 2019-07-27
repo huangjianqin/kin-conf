@@ -1,4 +1,4 @@
-package org.kin.conf.core.exception;
+package org.kin.conf.client.exception;
 
 /**
  * @author huangjianqin

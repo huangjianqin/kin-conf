@@ -1,6 +1,6 @@
 package org.kin.conf.demo;
 
-import org.kin.conf.core.domain.Conf;
+import org.kin.conf.client.domain.Conf;
 
 /**
  * @author huangjianqin

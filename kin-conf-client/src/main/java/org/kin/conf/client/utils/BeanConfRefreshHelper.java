@@ -1,7 +1,7 @@
-package org.kin.conf.core.utils;
+package org.kin.conf.client.utils;
 
-import org.kin.conf.core.domain.BeanConfWrapper;
-import org.kin.conf.core.exception.ConfValueTypeErrorException;
+import org.kin.conf.client.domain.BeanConfWrapper;
+import org.kin.conf.client.exception.ConfValueTypeErrorException;
 import org.kin.framework.utils.ClassUtils;
 import org.kin.framework.utils.ExceptionUtils;
 import org.springframework.beans.BeanWrapper;

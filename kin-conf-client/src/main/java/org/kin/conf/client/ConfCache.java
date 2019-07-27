@@ -1,6 +1,6 @@
-package org.kin.conf.core;
+package org.kin.conf.client;
 
-import org.kin.conf.core.domain.ConfDTO;
+import org.kin.conf.client.domain.ConfDTO;
 import org.kin.framework.utils.CollectionUtils;
 import org.kin.framework.utils.StringUtils;
 

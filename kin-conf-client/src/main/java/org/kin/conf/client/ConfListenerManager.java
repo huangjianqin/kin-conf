@@ -1,6 +1,6 @@
-package org.kin.conf.core;
+package org.kin.conf.client;
 
-import org.kin.conf.core.listener.ConfChangeListener;
+import org.kin.conf.client.listener.ConfChangeListener;
 import org.kin.framework.utils.CollectionUtils;
 import org.kin.framework.utils.StringUtils;
 import org.slf4j.Logger;

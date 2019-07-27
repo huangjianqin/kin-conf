@@ -1,4 +1,4 @@
-package org.kin.conf.core.listener;
+package org.kin.conf.client.listener;
 
 /**
  * @author huangjianqin
