@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class KinConf {
     private static String appName;
-    private static List<String> centerAddresses = new ArrayList<>();
+    private static List<String> diamondAddresses = new ArrayList<>();
     private static String env;
     private static String mirrorFile;
 
@@ -30,14 +30,14 @@ public class KinConf {
         });
     }
 
-    public static synchronized void init(String appName, String centerAddress, String env, String mirrorFile) {
+    public static synchronized void init(String appName, String diamondAddress, String env, String mirrorFile) {
         Preconditions.checkArgument(StringUtils.isNotBlank(appName), "param appName must not blank");
-        Preconditions.checkArgument(StringUtils.isNotBlank(centerAddress), "param centerAddress must not blank");
+        Preconditions.checkArgument(StringUtils.isNotBlank(diamondAddress), "param diamondAddress must not blank");
         Preconditions.checkArgument(StringUtils.isNotBlank(env), "param env must not blank");
         Preconditions.checkArgument(StringUtils.isNotBlank(mirrorFile), "param mirrorFile must not blank");
 
         KinConf.appName = appName;
-        KinConf.centerAddresses.addAll(Arrays.asList(centerAddress.split(",")));
+        KinConf.diamondAddresses.addAll(Arrays.asList(diamondAddress.split(",")));
         KinConf.env = env;
         boolean needRefreshCache = false;
         if (StringUtils.isNotBlank(KinConf.mirrorFile) && !KinConf.mirrorFile.equals(mirrorFile)) {
@@ -58,18 +58,18 @@ public class KinConf {
         // monitor
         Set<String> keys = ConfCache.cachedKeys();
 
-        boolean monitorReturn = ConfCenter.monitor(keys);
+        boolean monitorReturn = ConfDiamond.monitor(keys);
         // avoid fail-retry request too quick
         if (!monitorReturn) {
             TimeUnit.SECONDS.sleep(10);
         }
 
-        // refresh cache: center > cache
+        // refresh cache: diamond > cache
         if (keys.size() > 0) {
-            Map<String, String> centerConfs = ConfCenter.get(keys);
-            if (centerConfs != null && centerConfs.size() > 0) {
-                for (String key : centerConfs.keySet()) {
-                    String value = centerConfs.get(key);
+            Map<String, String> diamondConfs = ConfDiamond.get(keys);
+            if (diamondConfs != null && diamondConfs.size() > 0) {
+                for (String key : diamondConfs.keySet()) {
+                    String value = diamondConfs.get(key);
 
                     ConfDTO conf = ConfCache.get(key);
                     if (conf != null && conf.getValue() != null && conf.getValue().equals(value)) {
@@ -100,8 +100,8 @@ public class KinConf {
         return appName;
     }
 
-    public static List<String> getCenterAddresses() {
-        return centerAddresses;
+    public static List<String> getDiamondAddresses() {
+        return diamondAddresses;
     }
 
     public static String getEnv() {
@@ -128,8 +128,8 @@ public class KinConf {
             return conf.getValue();
         }
 
-        //level 3: center
-        conf = ConfCenter.get(key);
+        //level 3: diamond
+        conf = ConfDiamond.get(key);
         if (conf != null) {
             //写回缓存
             ConfCache.put(conf.getKey(), conf.getValue());

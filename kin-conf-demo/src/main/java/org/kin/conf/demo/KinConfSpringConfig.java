@@ -19,8 +19,8 @@ public class KinConfSpringConfig implements InitializingBean {
 
     @Value("${kin.conf.appName}")
     private String appName;
-    @Value("${kin.conf.centerAddress}")
-    private String centerAddress;
+    @Value("${kin.conf.diamondAddress}")
+    private String diamondAddress;
     @Value("${kin.conf.env}")
     private String env;
     @Value("${kin.conf.mirrorFile}")
@@ -29,7 +29,7 @@ public class KinConfSpringConfig implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        KinConf.init(appName, centerAddress, env, mirrorFile);
+        KinConf.init(appName, diamondAddress, env, mirrorFile);
     }
 
     @Bean

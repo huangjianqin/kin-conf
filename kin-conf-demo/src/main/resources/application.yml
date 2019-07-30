@@ -1,6 +1,6 @@
 kin:
   conf:
     appName: demo
-    centerAddress: localhost:8080
+    diamondAddress: localhost:8080
     env: test
     mirrorFile: data/mirror.properties

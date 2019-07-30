@@ -24,17 +24,17 @@ class ConfCache {
         //从mirror读取配置
         Map<String, String> mirrorConfs = ConfMirror.mirrorConfs();
 
-        //从center更新配置
-        Map<String, String> centerConfs = Collections.emptyMap();
+        //从diamond更新配置
+        Map<String, String> diamondConfs = Collections.emptyMap();
         if (CollectionUtils.isNonEmpty(mirrorConfs.keySet())) {
-            centerConfs = ConfCenter.get(mirrorConfs.keySet());
+            diamondConfs = ConfDiamond.get(mirrorConfs.keySet());
         }
 
         if (CollectionUtils.isNonEmpty(mirrorConfs)) {
             initConfs.putAll(mirrorConfs);
         }
-        if (CollectionUtils.isNonEmpty(centerConfs)) {
-            initConfs.putAll(centerConfs);
+        if (CollectionUtils.isNonEmpty(diamondConfs)) {
+            initConfs.putAll(diamondConfs);
         }
 
         if (CollectionUtils.isNonEmpty(initConfs)) {
