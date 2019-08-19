@@ -28,6 +28,7 @@
         <ehcache.version>2.7.0</ehcache.version>
         <druid.version>1.1.9</druid.version>
         <spring.version>5.0.8.RELEASE</spring.version>
+        <fastjson.version>1.2.58</fastjson.version>
     </properties>
 
     <dependencies>
@@ -42,6 +43,13 @@
             <groupId>org.kin</groupId>
             <artifactId>kin-framework</artifactId>
             <version>${kin-framework.version}</version>
+        </dependency>
+        <!-- 解析json-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
