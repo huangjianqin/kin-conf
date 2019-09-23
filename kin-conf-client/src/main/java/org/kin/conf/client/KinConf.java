@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import org.kin.conf.client.domain.ConfDTO;
 import org.kin.conf.client.exception.ConfNotExistException;
 import org.kin.framework.actor.Keeper;
+import org.kin.framework.utils.CollectionUtils;
 import org.kin.framework.utils.ExceptionUtils;
 import org.kin.framework.utils.StringUtils;
 
@@ -30,17 +31,20 @@ public class KinConf {
         });
     }
 
+    public static synchronized void init(String mirrorFile) {
+        init("local", "", "local", mirrorFile);
+    }
+
     public static synchronized void init(String appName, String diamondAddress, String env, String mirrorFile) {
-        Preconditions.checkArgument(StringUtils.isNotBlank(appName), "param appName must not blank");
-        Preconditions.checkArgument(StringUtils.isNotBlank(diamondAddress), "param diamondAddress must not blank");
-        Preconditions.checkArgument(StringUtils.isNotBlank(env), "param env must not blank");
         Preconditions.checkArgument(StringUtils.isNotBlank(mirrorFile), "param mirrorFile must not blank");
 
         KinConf.appName = appName;
-        KinConf.diamondAddresses.addAll(Arrays.asList(diamondAddress.split(",")));
+        if(StringUtils.isNotBlank(diamondAddress)){
+            KinConf.diamondAddresses.addAll(Arrays.asList(diamondAddress.split(",")));
+        }
         KinConf.env = env;
         boolean needRefreshCache = false;
-        if (StringUtils.isNotBlank(KinConf.mirrorFile) && !KinConf.mirrorFile.equals(mirrorFile)) {
+        if (!mirrorFile.equals(KinConf.mirrorFile)) {
             needRefreshCache = true;
         }
         KinConf.mirrorFile = mirrorFile;
@@ -50,6 +54,10 @@ public class KinConf {
     }
 
     private static void refreshCacheAndMirror() throws InterruptedException {
+        if(CollectionUtils.isEmpty(KinConf.getDiamondAddresses())){
+            return;
+        }
+
         if (ConfCache.cacheSize() == 0) {
             TimeUnit.SECONDS.sleep(3);
             return;

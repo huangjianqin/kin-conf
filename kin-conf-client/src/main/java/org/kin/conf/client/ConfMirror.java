@@ -14,7 +14,7 @@ import java.util.Properties;
  */
 class ConfMirror {
     static ConfDTO get(String key) {
-        Properties properties = PropertiesUtils.loadClassPathProperties(KinConf.getMirrorFile());
+        Properties properties = PropertiesUtils.loadFileProperties(KinConf.getMirrorFile());
         if (properties != null && properties.containsKey(key)) {
             return new ConfDTO(key, properties.getProperty(key));
         }
@@ -23,7 +23,7 @@ class ConfMirror {
 
     static Map<String, String> mirrorConfs() {
         Map<String, String> mirrorConfs = new HashMap<>();
-        Properties properties = PropertiesUtils.loadClassPathProperties(KinConf.getMirrorFile());
+        Properties properties = PropertiesUtils.loadFileProperties(KinConf.getMirrorFile());
         if (properties != null && CollectionUtils.isNonEmpty(properties.stringPropertyNames())) {
             for (String name : properties.stringPropertyNames()) {
                 mirrorConfs.put(name, properties.getProperty(name));
