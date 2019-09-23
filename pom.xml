@@ -29,6 +29,7 @@
         <druid.version>1.1.9</druid.version>
         <spring.version>5.0.8.RELEASE</spring.version>
         <fastjson.version>1.2.58</fastjson.version>
+        <kin-transport-http.version>0.1.0.0</kin-transport-http.version>
     </properties>
 
     <dependencies>
@@ -106,12 +107,11 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.0.2</version>
                 <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>test-jar</goal>
-                        </goals>
-                    </execution>
+<!--                    <execution>-->
+<!--                        <goals>-->
+<!--                            <goal>test-jar</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
                 </executions>
                 <configuration>
                     <archive>
@@ -129,13 +129,12 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>2.5.5</version>
                 <executions>
-                    <execution>
-                        <id>make-assembly</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
+<!--                    <execution>-->
+<!--                        <id>make-assembly</id>-->
+<!--                        <goals>-->
+<!--                            <goal>single</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
                 </executions>
                 <configuration>
                     <archive>
