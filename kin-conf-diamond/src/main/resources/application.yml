@@ -6,8 +6,9 @@ kin:
 server:
   port: 8080
   session-timeout: 60
-  tomcat.max-threads: 0
-  tomcat.uri-encoding: UTF-8
+  tomcat:
+    max-threads: 0
+    uri-encoding: UTF-8
 
 spring:
   http:

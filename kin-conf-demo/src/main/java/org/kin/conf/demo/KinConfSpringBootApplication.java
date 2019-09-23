@@ -17,10 +17,9 @@ public class KinConfSpringBootApplication {
         System.out.println(KinConf.get("a"));
         System.out.println(KinConf.getBoolean("b"));
         System.out.println(KinConf.getShort("c"));
-        System.out.println(KinConf.getInt("d"));
-        System.out.println(KinConf.getLong("e"));
-        System.out.println(KinConf.getFloat("f"));
-        System.out.println(KinConf.getDouble("g"));
+        System.out.println(KinConf.getFloat("d"));
+        System.out.println(KinConf.getInt("e"));
+//        System.out.println(KinConf.getLong("f"));
 
         System.out.println(context.getBean(ConfBean.class));
     }

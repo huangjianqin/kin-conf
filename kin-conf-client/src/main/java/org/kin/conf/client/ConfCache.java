@@ -4,10 +4,7 @@ import org.kin.conf.client.domain.ConfDTO;
 import org.kin.framework.utils.CollectionUtils;
 import org.kin.framework.utils.StringUtils;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -38,9 +35,15 @@ class ConfCache {
         }
 
         if (CollectionUtils.isNonEmpty(initConfs)) {
+            Map<String, String> newMirrorConfs = new HashMap<>();
             for (Map.Entry<String, String> entry : initConfs.entrySet()) {
-                CACHE.put(entry.getKey(), new ConfDTO(entry.getKey(), entry.getValue()));
+                if (Objects.nonNull(entry.getValue())) {
+                    CACHE.put(entry.getKey(), new ConfDTO(entry.getKey(), entry.getValue()));
+                    newMirrorConfs.put(entry.getKey(), entry.getValue());
+                }
             }
+            //马上刷新镜像
+            ConfMirror.writeMirror(newMirrorConfs);
         }
     }
 

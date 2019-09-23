@@ -66,7 +66,7 @@ public class ConfController {
 
 
     // ---------------------- rest api ----------------------
-    @RequestMapping("/find")
+    @RequestMapping(value = "/find")
     @ResponseBody
     public CommonResponse<Map<String, String>> getConfs(@RequestBody FindConfParams params) {
         return adminService.getConfs(params.getAppName(), params.getEnv(), params.getKeys());

@@ -20,6 +20,8 @@ public class KinConf {
     private static List<String> diamondAddresses = new ArrayList<>();
     private static String env;
     private static String mirrorFile;
+    /** 标识是否合并http请求 */
+    private static boolean merge;
 
     static {
         Keeper.keep(() -> {
@@ -36,10 +38,14 @@ public class KinConf {
     }
 
     public static synchronized void init(String appName, String diamondAddress, String env, String mirrorFile) {
+        init(appName, diamondAddress, env, mirrorFile, false);
+    }
+
+    public static synchronized void init(String appName, String diamondAddress, String env, String mirrorFile, boolean merge) {
         Preconditions.checkArgument(StringUtils.isNotBlank(mirrorFile), "param mirrorFile must not blank");
 
         KinConf.appName = appName;
-        if(StringUtils.isNotBlank(diamondAddress)){
+        if (StringUtils.isNotBlank(diamondAddress)) {
             KinConf.diamondAddresses.addAll(Arrays.asList(diamondAddress.split(",")));
         }
         KinConf.env = env;
@@ -48,13 +54,14 @@ public class KinConf {
             needRefreshCache = true;
         }
         KinConf.mirrorFile = mirrorFile;
+        KinConf.merge = merge;
         if (needRefreshCache) {
             ConfCache.init();
         }
     }
 
     private static void refreshCacheAndMirror() throws InterruptedException {
-        if(CollectionUtils.isEmpty(KinConf.getDiamondAddresses())){
+        if (CollectionUtils.isEmpty(KinConf.getDiamondAddresses())) {
             return;
         }
 
@@ -65,12 +72,6 @@ public class KinConf {
 
         // monitor
         Set<String> keys = ConfCache.cachedKeys();
-
-        boolean monitorReturn = ConfDiamond.monitor(keys);
-        // avoid fail-retry request too quick
-        if (!monitorReturn) {
-            TimeUnit.SECONDS.sleep(10);
-        }
 
         // refresh cache: diamond > cache
         if (keys.size() > 0) {
@@ -101,6 +102,8 @@ public class KinConf {
         }
 
         ConfMirror.writeMirror(mirrorConfs);
+
+        TimeUnit.SECONDS.sleep(10);
     }
 
     //-----------------------------------------------------------------------------------------------------------
@@ -118,6 +121,10 @@ public class KinConf {
 
     public static String getMirrorFile() {
         return mirrorFile;
+    }
+
+    public static boolean isMerge() {
+        return merge;
     }
 
     //--------------------------------------------------api------------------------------------------------------
