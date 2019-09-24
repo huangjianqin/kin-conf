@@ -12,10 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * @author huangjianqin
@@ -40,7 +37,8 @@ class ConfDiamond {
     private static Object lock = new Object();
     private static volatile HashSet<String> keyPool = new HashSet<>();
     private static Future<Map<String, String>> future = null;
-    private static ThreadManager executor = new ThreadManager(new ScheduledThreadPoolExecutor(1));
+    private static ThreadManager executor = new ThreadManager(
+            new ThreadPoolExecutor(0, 5, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>()), 5);
 
     static {
         JvmCloseCleaner.DEFAULT().add(() -> executor.shutdown());
@@ -62,22 +60,24 @@ class ConfDiamond {
                         ConfDiamond.keyPool = new HashSet<>();
                     }
                     return get(reqKeys);
-                }, 200, TimeUnit.MILLISECONDS);
+                }, 300, TimeUnit.MILLISECONDS);
             }
             future = ConfDiamond.future;
-            while (future != null && !future.isDone()) {
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException e) {
-                    ExceptionUtils.log(e);
-                }
-            }
+        }
+        while (future != null && !future.isDone()) {
             try {
-                Map<String, String> data = future.get();
-                return new ConfDTO(key, data.get(key));
-            } catch (InterruptedException | ExecutionException e) {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
                 ExceptionUtils.log(e);
             }
+        }
+        try {
+            Map<String, String> data = future.get();
+            if (Objects.nonNull(data.get(key))) {
+                return new ConfDTO(key, data.get(key));
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            ExceptionUtils.log(e);
         }
 
         return null;
@@ -103,15 +103,22 @@ class ConfDiamond {
             params.put(REQ_ENV, KinConf.getEnv());
             params.put(REQ_KEYS, new ArrayList<>(keys));
 
-            String respJson = HttpUtils.post(requestUrl, params).getContent();
-            if (StringUtils.isNotBlank(respJson)) {
-                JSONObject jsonObject = JSON.parseObject(respJson);
-                int result = jsonObject.getInteger(RESP_RESULT);
-                if (result == RESP_SUCCESS_RESULT && jsonObject.containsKey(RESP_DATA)) {
-                    return jsonObject.getObject(RESP_DATA, Map.class);
-                } else {
-                    log.error("请求'{}'异常, 返回{}", requestUrl, respJson);
+            try {
+                HttpUtils.HttpResponseWrapper wrapper = HttpUtils.post(requestUrl, params);
+                if (wrapper != null) {
+                    String respJson = wrapper.getContent();
+                    if (StringUtils.isNotBlank(respJson)) {
+                        JSONObject jsonObject = JSON.parseObject(respJson);
+                        int result = jsonObject.getInteger(RESP_RESULT);
+                        if (result == RESP_SUCCESS_RESULT && jsonObject.containsKey(RESP_DATA)) {
+                            return jsonObject.getObject(RESP_DATA, Map.class);
+                        } else {
+                            log.error("请求'{}'异常, 返回{}", requestUrl, respJson);
+                        }
+                    }
                 }
+            } catch (Exception e) {
+                ExceptionUtils.log(e);
             }
         }
         return Collections.emptyMap();
@@ -125,13 +132,17 @@ class ConfDiamond {
             params.put(REQ_ENV, KinConf.getEnv());
             params.put(REQ_KEYS, keys);
 
-            String respJson = HttpUtils.post(requestUrl, params).getContent();
-            if (StringUtils.isNotBlank(respJson)) {
-                JSONObject jsonObject = JSON.parseObject(respJson);
-                int result = jsonObject.getInteger(RESP_RESULT);
-                if (result == RESP_SUCCESS_RESULT) {
-                    return true;
+            try {
+                String respJson = HttpUtils.post(requestUrl, params).getContent();
+                if (StringUtils.isNotBlank(respJson)) {
+                    JSONObject jsonObject = JSON.parseObject(respJson);
+                    int result = jsonObject.getInteger(RESP_RESULT);
+                    if (result == RESP_SUCCESS_RESULT) {
+                        return true;
+                    }
                 }
+            } catch (Exception e) {
+                ExceptionUtils.log(e);
             }
         }
 

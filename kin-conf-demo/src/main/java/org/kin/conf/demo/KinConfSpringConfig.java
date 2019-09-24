@@ -31,7 +31,7 @@ public class KinConfSpringConfig implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() {
-        KinConf.init(appName, diamondAddress, env, mirrorFile);
+        KinConf.init(appName, diamondAddress, env, mirrorFile, true);
     }
 
     @Bean

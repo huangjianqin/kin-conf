@@ -73,7 +73,9 @@ public class KinConf {
         // monitor
         Set<String> keys = ConfCache.cachedKeys();
         //异步http请求, 会根据server返回的DeferredResult决定阻塞时间, 如果在等待期间配置发生, server会立即返回
-        ConfDiamond.monitor(keys);
+        if (!ConfDiamond.monitor(keys)) {
+            TimeUnit.SECONDS.sleep(10);
+        }
 
         // refresh cache: diamond > cache
         if (keys.size() > 0) {
