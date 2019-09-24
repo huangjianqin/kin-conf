@@ -14,12 +14,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.kin</groupId>
-            <artifactId>kin-transport-http</artifactId>
-            <version>${kin-transport-http.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
             <version>${spring.version}</version>
@@ -31,6 +25,20 @@
             <artifactId>spring-context</artifactId>
             <version>${spring.version}</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- http请求-->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${httpclient.version}</version>
+        </dependency>
+
+        <!-- 异步http请求-->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpasyncclient</artifactId>
+            <version>${httpasyncclient.version}</version>
         </dependency>
     </dependencies>
 

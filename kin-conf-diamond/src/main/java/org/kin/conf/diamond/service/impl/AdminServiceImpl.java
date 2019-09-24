@@ -263,8 +263,7 @@ public class AdminServiceImpl implements AdminService {
             deferredResult.setResult(CommonResponse.fail("请求key列表不能为空"));
             return deferredResult;
         }
-
-        Map<String, String> result = new HashMap<>();
+        
         for (String key : keys) {
             if (key != null) {
                 key = key.trim();
@@ -274,7 +273,6 @@ public class AdminServiceImpl implements AdminService {
                 MonitorData.add(appName, env, key, deferredResult);
             }
         }
-
         return deferredResult;
     }
 }

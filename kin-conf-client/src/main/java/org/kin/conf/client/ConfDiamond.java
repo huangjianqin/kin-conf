@@ -3,11 +3,11 @@ package org.kin.conf.client;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.kin.conf.client.domain.ConfDTO;
+import org.kin.conf.client.utils.HttpUtils;
 import org.kin.framework.JvmCloseCleaner;
 import org.kin.framework.concurrent.ThreadManager;
 import org.kin.framework.utils.ExceptionUtils;
 import org.kin.framework.utils.StringUtils;
-import org.kin.transport.http.utils.HttpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -103,7 +103,7 @@ class ConfDiamond {
             params.put(REQ_ENV, KinConf.getEnv());
             params.put(REQ_KEYS, new ArrayList<>(keys));
 
-            String respJson = HttpUtils.postJson(requestUrl, params).getContent();
+            String respJson = HttpUtils.post(requestUrl, params).getContent();
             if (StringUtils.isNotBlank(respJson)) {
                 JSONObject jsonObject = JSON.parseObject(respJson);
                 int result = jsonObject.getInteger(RESP_RESULT);
@@ -125,7 +125,7 @@ class ConfDiamond {
             params.put(REQ_ENV, KinConf.getEnv());
             params.put(REQ_KEYS, keys);
 
-            String respJson = HttpUtils.postJson(requestUrl, params).getContent();
+            String respJson = HttpUtils.post(requestUrl, params).getContent();
             if (StringUtils.isNotBlank(respJson)) {
                 JSONObject jsonObject = JSON.parseObject(respJson);
                 int result = jsonObject.getInteger(RESP_RESULT);

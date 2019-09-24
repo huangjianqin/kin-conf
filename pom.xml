@@ -29,7 +29,8 @@
         <druid.version>1.1.9</druid.version>
         <spring.version>5.0.8.RELEASE</spring.version>
         <fastjson.version>1.2.58</fastjson.version>
-        <kin-transport-http.version>0.1.0.0</kin-transport-http.version>
+        <httpclient.version>4.5.9</httpclient.version>
+        <httpasyncclient.version>4.1.4</httpasyncclient.version>
     </properties>
 
     <dependencies>
