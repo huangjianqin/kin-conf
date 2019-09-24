@@ -27,18 +27,11 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- http请求-->
+        <!-- okhttp-->
         <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>${httpclient.version}</version>
-        </dependency>
-
-        <!-- 异步http请求-->
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpasyncclient</artifactId>
-            <version>${httpasyncclient.version}</version>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>${okhttp.version}</version>
         </dependency>
     </dependencies>
 

@@ -104,17 +104,14 @@ class ConfDiamond {
             params.put(REQ_KEYS, new ArrayList<>(keys));
 
             try {
-                HttpUtils.HttpResponseWrapper wrapper = HttpUtils.post(requestUrl, params);
-                if (wrapper != null) {
-                    String respJson = wrapper.getContent();
-                    if (StringUtils.isNotBlank(respJson)) {
-                        JSONObject jsonObject = JSON.parseObject(respJson);
-                        int result = jsonObject.getInteger(RESP_RESULT);
-                        if (result == RESP_SUCCESS_RESULT && jsonObject.containsKey(RESP_DATA)) {
-                            return jsonObject.getObject(RESP_DATA, Map.class);
-                        } else {
-                            log.error("请求'{}'异常, 返回{}", requestUrl, respJson);
-                        }
+                String respJson = HttpUtils.post(requestUrl, params);
+                if (StringUtils.isNotBlank(respJson)) {
+                    JSONObject jsonObject = JSON.parseObject(respJson);
+                    int result = jsonObject.getInteger(RESP_RESULT);
+                    if (result == RESP_SUCCESS_RESULT && jsonObject.containsKey(RESP_DATA)) {
+                        return jsonObject.getObject(RESP_DATA, Map.class);
+                    } else {
+                        log.error("请求'{}'异常, 返回{}", requestUrl, respJson);
                     }
                 }
             } catch (Exception e) {
@@ -133,7 +130,7 @@ class ConfDiamond {
             params.put(REQ_KEYS, keys);
 
             try {
-                String respJson = HttpUtils.post(requestUrl, params).getContent();
+                String respJson = HttpUtils.post(requestUrl, params);
                 if (StringUtils.isNotBlank(respJson)) {
                     JSONObject jsonObject = JSON.parseObject(respJson);
                     int result = jsonObject.getInteger(RESP_RESULT);
