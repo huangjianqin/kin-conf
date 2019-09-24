@@ -30,28 +30,27 @@ public class ConfController {
     @Autowired
     private UserService userService;
 
-    private static String env = "test";
-
     @RequestMapping("/list")
     @ResponseBody
     @Permission
     public ConfListResponse list(HttpServletRequest request,
                                  int page,
-                                 String appName) {
+                                 String appName,
+                                 String env) {
         return adminService.listConf(page, appName, env);
     }
 
     @RequestMapping("/delete")
     @ResponseBody
     @Permission
-    public CommonResponse<String> delete(HttpServletRequest request, String appName, String key) {
+    public CommonResponse<String> delete(HttpServletRequest request, String appName, String key, String env) {
         return adminService.delete(userService.isLogin(request), appName, env, key);
     }
 
     @RequestMapping("/add")
     @ResponseBody
     @Permission
-    public CommonResponse<String> add(HttpServletRequest request, Conf conf) {
+    public CommonResponse<String> add(HttpServletRequest request, String env, Conf conf) {
         conf.setEnv(env);
         return adminService.add(userService.isLogin(request), conf);
     }
@@ -59,7 +58,7 @@ public class ConfController {
     @RequestMapping("/update")
     @ResponseBody
     @Permission
-    public CommonResponse<String> update(HttpServletRequest request, Conf conf) {
+    public CommonResponse<String> update(HttpServletRequest request, String env, Conf conf) {
         conf.setEnv(env);
         return adminService.update(userService.isLogin(request), conf);
     }
