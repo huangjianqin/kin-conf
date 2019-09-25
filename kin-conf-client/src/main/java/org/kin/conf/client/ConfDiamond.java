@@ -38,7 +38,7 @@ class ConfDiamond {
     private static volatile HashSet<String> keyPool = new HashSet<>();
     private static Future<Map<String, String>> future = null;
     private static ThreadManager executor = new ThreadManager(
-            new ThreadPoolExecutor(0, 5, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>()), 5);
+            new ThreadPoolExecutor(5, 5, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>()), 5);
 
     static {
         JvmCloseCleaner.DEFAULT().add(() -> executor.shutdown());
