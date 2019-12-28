@@ -1,9 +1,10 @@
 package org.kin.conf.client.utils;
 
-import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 import org.kin.framework.utils.ExceptionUtils;
+import org.kin.framework.utils.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,12 +54,12 @@ public class HttpUtils {
     }
 
     private static String converterMap2JsonStr(Map<String, Object> params) {
-        JSONObject jsonObject = new JSONObject();
-        for (Map.Entry<String, Object> entry : params.entrySet()) {
-            jsonObject.put(entry.getKey(), entry.getValue());
+        try {
+            return JSON.parser.writeValueAsString(params);
+        } catch (JsonProcessingException e) {
+            ExceptionUtils.log(e);
         }
-
-        return jsonObject.toJSONString();
+        return "{}";
     }
 
     public static String post(String url, Map<String, Object> params) {

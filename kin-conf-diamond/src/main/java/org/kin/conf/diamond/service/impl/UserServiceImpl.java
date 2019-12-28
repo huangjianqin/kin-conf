@@ -1,12 +1,14 @@
 package org.kin.conf.diamond.service.impl;
 
-import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.kin.conf.diamond.dao.UserDao;
 import org.kin.conf.diamond.domain.CommonResponse;
 import org.kin.conf.diamond.domain.CookieKey;
 import org.kin.conf.diamond.entity.User;
 import org.kin.conf.diamond.service.UserService;
 import org.kin.conf.diamond.utils.CookieUtils;
+import org.kin.framework.utils.ExceptionUtils;
+import org.kin.framework.utils.JSON;
 import org.kin.framework.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +29,12 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     private String makeToken(User user) {
-        String tokenJson = JSON.toJSONString(user);
+        String tokenJson = "";
+        try {
+            tokenJson = JSON.parser.writeValueAsString(user);
+        } catch (JsonProcessingException e) {
+            ExceptionUtils.log(e);
+        }
         String tokenHex = new BigInteger(tokenJson.getBytes()).toString(16);
         return tokenHex;
     }
@@ -36,7 +43,11 @@ public class UserServiceImpl implements UserService {
         User user = null;
         if (tokenHex != null) {
             String tokenJson = new String(new BigInteger(tokenHex, 16).toByteArray());      // username_password(md5)
-            user = JSON.parseObject(tokenJson, User.class);
+            try {
+                user = JSON.parser.readValue(tokenJson, User.class);
+            } catch (JsonProcessingException e) {
+                ExceptionUtils.log(e);
+            }
         }
         return user;
     }
