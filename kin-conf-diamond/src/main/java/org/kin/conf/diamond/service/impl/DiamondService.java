@@ -5,7 +5,7 @@ import org.kin.conf.diamond.dao.ConfMsgDao;
 import org.kin.conf.diamond.domain.*;
 import org.kin.conf.diamond.entity.Conf;
 import org.kin.conf.diamond.entity.ConfMsg;
-import org.kin.framework.actor.Keeper;
+import org.kin.framework.concurrent.Keeper;
 import org.kin.framework.utils.CollectionUtils;
 import org.kin.framework.utils.ExceptionUtils;
 import org.kin.framework.utils.TimeUtils;
