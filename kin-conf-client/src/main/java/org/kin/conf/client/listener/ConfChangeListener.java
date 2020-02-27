@@ -8,6 +8,8 @@ package org.kin.conf.client.listener;
 public interface ConfChangeListener {
     /**
      * 添加listener或者配置变化时触发
+     * @param key
+     * @param value
      */
     void onChange(String key, String value);
 }

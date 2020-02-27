@@ -20,6 +20,7 @@ public class BeanConfWrapper {
     }
 
     //getter
+
     public String getBeanName() {
         return beanName;
     }
@@ -30,12 +31,18 @@ public class BeanConfWrapper {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         BeanConfWrapper that = (BeanConfWrapper) o;
 
-        if (!beanName.equals(that.beanName)) return false;
+        if (!beanName.equals(that.beanName)) {
+            return false;
+        }
         return confField.equals(that.confField);
     }
 

@@ -14,9 +14,9 @@ public class CookieUtils {
     private CookieUtils() {
     }
 
-    // 默认缓存时间,单位/秒, 2H
+    /** 默认缓存时间,单位/秒, 2H */
     private static final int COOKIE_MAX_AGE = 60 * 20;
-    // 保存路径,根路径
+    /** 保存路径,根路径 */
     private static final String COOKIE_PATH = "/";
 
     public static void set(HttpServletResponse response, String key, String value, boolean ifRemember) {

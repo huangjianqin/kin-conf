@@ -26,6 +26,7 @@ public class ConfMsg implements Serializable {
     private String value;
 
     //setter && getter
+
     public int getId() {
         return id;
     }

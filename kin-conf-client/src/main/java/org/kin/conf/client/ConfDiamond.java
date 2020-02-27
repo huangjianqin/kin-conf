@@ -4,6 +4,7 @@ import org.kin.conf.client.domain.ConfDTO;
 import org.kin.conf.client.domain.ServerResponse;
 import org.kin.conf.client.utils.HttpUtils;
 import org.kin.framework.JvmCloseCleaner;
+import org.kin.framework.concurrent.SimpleThreadFactory;
 import org.kin.framework.concurrent.ThreadManager;
 import org.kin.framework.utils.ExceptionUtils;
 import org.kin.framework.utils.JSON;
@@ -38,7 +39,8 @@ class ConfDiamond {
     private static volatile HashSet<String> keyPool = new HashSet<>();
     private static Future<Map<String, String>> future = null;
     private static ThreadManager executor = new ThreadManager(
-            new ThreadPoolExecutor(5, 5, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>()), 5);
+            new ThreadPoolExecutor(5, 5, 60, TimeUnit.SECONDS,
+                    new LinkedBlockingQueue<>(), new SimpleThreadFactory("diamond-merge-request-")), 5);
 
     static {
         JvmCloseCleaner.DEFAULT().add(() -> executor.shutdown());
@@ -98,7 +100,7 @@ class ConfDiamond {
     static Map<String, String> get(Collection<String> keys) {
         for (String diamondAddress : KinConf.getDiamondAddresses()) {
             String requestUrl = diamondAddress + GET_URL;
-            Map<String, Object> params = new HashMap<>();
+            Map<String, Object> params = new HashMap<>(10);
             params.put(REQ_APPNAME, KinConf.getAppName());
             params.put(REQ_ENV, KinConf.getEnv());
             params.put(REQ_KEYS, new ArrayList<>(keys));
@@ -106,7 +108,7 @@ class ConfDiamond {
             try {
                 String respJson = HttpUtils.post(requestUrl, params);
                 if (StringUtils.isNotBlank(respJson)) {
-                    ServerResponse response = JSON.parser.readValue(respJson, ServerResponse.class);
+                    ServerResponse response = JSON.PARSER.readValue(respJson, ServerResponse.class);
                     if (response.getCode() == RESP_SUCCESS_RESULT) {
                         return response.getData();
                     } else {
@@ -123,7 +125,7 @@ class ConfDiamond {
     static boolean monitor(Collection<String> keys) {
         for (String diamondAddress : KinConf.getDiamondAddresses()) {
             String requestUrl = diamondAddress + MONITOR_URL;
-            Map<String, Object> params = new HashMap<>();
+            Map<String, Object> params = new HashMap<>(10);
             params.put(REQ_APPNAME, KinConf.getAppName());
             params.put(REQ_ENV, KinConf.getEnv());
             params.put(REQ_KEYS, keys);
@@ -131,7 +133,7 @@ class ConfDiamond {
             try {
                 String respJson = HttpUtils.post(requestUrl, params);
                 if (StringUtils.isNotBlank(respJson)) {
-                    ServerResponse response = JSON.parser.readValue(respJson, ServerResponse.class);
+                    ServerResponse response = JSON.PARSER.readValue(respJson, ServerResponse.class);
                     if (response.getCode() == RESP_SUCCESS_RESULT) {
                         return true;
                     }

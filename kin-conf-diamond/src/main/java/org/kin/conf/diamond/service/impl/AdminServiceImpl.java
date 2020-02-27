@@ -209,6 +209,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     //-----------------------------------------------------------------rest api-----------------------------------------
+
     @Override
     public CommonResponse<Map<String, String>> getConfs(String appName, String env, List<String> keys) {
         if (StringUtils.isBlank(appName)) {
@@ -225,7 +226,7 @@ public class AdminServiceImpl implements AdminService {
             return CommonResponse.fail("请求key列表不能为空");
         }
 
-        Map<String, String> result = new HashMap<>();
+        Map<String, String> result = new HashMap<>(keys.size());
         for (String key : keys) {
             if (key != null) {
                 key = key.trim();

@@ -29,7 +29,7 @@ public class User implements Serializable {
     private int permission;
     @Column(columnDefinition = "varchar(1000) DEFAULT NULL COMMENT '权限配置数据'")
     @Convert(converter = JpaPermissionStrConverter.class)
-    //格式"appname#env#env01,appname#env02"
+    /** 格式"appname#env#env01,appname#env02" */
     private Map<String, List<String>> permissionData = new HashMap<>();
 
     public boolean isUser() {
@@ -77,6 +77,7 @@ public class User implements Serializable {
     }
 
     //setter && getter
+
     public String getAccount() {
         return account;
     }

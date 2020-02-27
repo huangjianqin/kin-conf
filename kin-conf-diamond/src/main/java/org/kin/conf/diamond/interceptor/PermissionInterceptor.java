@@ -37,7 +37,7 @@ public class PermissionInterceptor extends HandlerInterceptorAdapter {
         }
 
         if (needLogin) {
-            User user = userService.isLogin(request);
+            User user = userService.getUser(request);
             if (user == null) {
                 //TODO 跳转到登陆页面
             }

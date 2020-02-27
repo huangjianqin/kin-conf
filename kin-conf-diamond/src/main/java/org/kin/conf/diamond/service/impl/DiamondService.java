@@ -36,7 +36,7 @@ public class DiamondService implements InitializingBean, DisposableBean {
     @Autowired
     private Duplicatehelper duplicatehelper;
 
-    //副本同步间隔
+    /** 副本同步间隔 */
     @Value("${kin.conf.duplicateInterval}")
     private int duplicateInterval;
 

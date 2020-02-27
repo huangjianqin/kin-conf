@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 public class Duplicatehelper implements DisposableBean {
     private static final Logger log = LoggerFactory.getLogger(Duplicatehelper.class);
 
-    //副本根目录
+    /** 副本根目录 */
     @Value("${kin.conf.duplicatePath}")
     private String duplicatePath;
 

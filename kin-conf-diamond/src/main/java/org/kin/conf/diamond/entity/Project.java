@@ -20,6 +20,7 @@ public class Project implements Serializable {
     private String title;
 
     //setter && getter
+
     public String getAppName() {
         return appName;
     }

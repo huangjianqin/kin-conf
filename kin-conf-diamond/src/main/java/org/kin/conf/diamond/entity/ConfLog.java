@@ -62,6 +62,7 @@ public class ConfLog implements Serializable {
     }
 
     //setter && getter
+
     public int getId() {
         return id;
     }

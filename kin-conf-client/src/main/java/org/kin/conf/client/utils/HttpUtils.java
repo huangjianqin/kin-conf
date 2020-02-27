@@ -13,7 +13,9 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by huangjianqin on 2019/6/18.
+ *
+ * @author huangjianqin
+ * @date 2019/6/18
  */
 public class HttpUtils {
     private static final Logger log = LoggerFactory.getLogger(HttpUtils.class);
@@ -55,7 +57,7 @@ public class HttpUtils {
 
     private static String converterMap2JsonStr(Map<String, Object> params) {
         try {
-            return JSON.parser.writeValueAsString(params);
+            return JSON.PARSER.writeValueAsString(params);
         } catch (JsonProcessingException e) {
             ExceptionUtils.log(e);
         }

@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
     private String makeToken(User user) {
         String tokenJson = "";
         try {
-            tokenJson = JSON.parser.writeValueAsString(user);
+            tokenJson = JSON.PARSER.writeValueAsString(user);
         } catch (JsonProcessingException e) {
             ExceptionUtils.log(e);
         }
@@ -42,9 +42,10 @@ public class UserServiceImpl implements UserService {
     private User parseToken(String tokenHex) {
         User user = null;
         if (tokenHex != null) {
-            String tokenJson = new String(new BigInteger(tokenHex, 16).toByteArray());      // username_password(md5)
+            // username_password(md5)
+            String tokenJson = new String(new BigInteger(tokenHex, 16).toByteArray());
             try {
-                user = JSON.parser.readValue(tokenJson, User.class);
+                user = JSON.PARSER.readValue(tokenJson, User.class);
             } catch (JsonProcessingException e) {
                 ExceptionUtils.log(e);
             }
@@ -80,7 +81,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User isLogin(HttpServletRequest request) {
+    public User getUser(HttpServletRequest request) {
         String cookieToken = CookieUtils.getValue(request, CookieKey.LOGIN_IDENTITY);
         if (cookieToken != null) {
             User user = parseToken(cookieToken);

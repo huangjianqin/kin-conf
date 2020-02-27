@@ -21,6 +21,7 @@ public class ConfUniqueKey implements Serializable {
     }
 
     //setter && getter
+
     public String getAppName() {
         return appName;
     }
@@ -47,13 +48,21 @@ public class ConfUniqueKey implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         ConfUniqueKey that = (ConfUniqueKey) o;
 
-        if (!appName.equals(that.appName)) return false;
-        if (!env.equals(that.env)) return false;
+        if (!appName.equals(that.appName)) {
+            return false;
+        }
+        if (!env.equals(that.env)) {
+            return false;
+        }
         return keyV.equals(that.keyV);
     }
 

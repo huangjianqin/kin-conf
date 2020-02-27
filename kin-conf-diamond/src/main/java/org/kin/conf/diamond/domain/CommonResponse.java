@@ -46,6 +46,7 @@ public class CommonResponse<T> {
     }
 
     //setter && getter
+
     public int getCode() {
         return code;
     }

@@ -44,7 +44,7 @@ public class ConfController {
     @ResponseBody
     @Permission
     public CommonResponse<String> delete(HttpServletRequest request, String appName, String key, String env) {
-        return adminService.delete(userService.isLogin(request), appName, env, key);
+        return adminService.delete(userService.getUser(request), appName, env, key);
     }
 
     @RequestMapping("/add")
@@ -52,7 +52,7 @@ public class ConfController {
     @Permission
     public CommonResponse<String> add(HttpServletRequest request, String env, Conf conf) {
         conf.setEnv(env);
-        return adminService.add(userService.isLogin(request), conf);
+        return adminService.add(userService.getUser(request), conf);
     }
 
     @RequestMapping("/update")
@@ -60,11 +60,12 @@ public class ConfController {
     @Permission
     public CommonResponse<String> update(HttpServletRequest request, String env, Conf conf) {
         conf.setEnv(env);
-        return adminService.update(userService.isLogin(request), conf);
+        return adminService.update(userService.getUser(request), conf);
     }
 
 
     // ---------------------- rest api ----------------------
+
     @RequestMapping(value = "/find")
     @ResponseBody
     public CommonResponse<Map<String, String>> getConfs(@RequestBody FindConfParams params) {

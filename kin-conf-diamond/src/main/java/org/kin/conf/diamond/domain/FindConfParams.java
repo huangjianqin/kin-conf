@@ -12,6 +12,7 @@ public class FindConfParams {
     private ArrayList<String> keys;
 
     //setter && getter
+
     public String getAppName() {
         return appName;
     }

@@ -99,7 +99,7 @@ public class KinConf {
         }
 
         // refresh mirror: cache > mirror
-        Map<String, String> mirrorConfs = new HashMap<>();
+        Map<String, String> mirrorConfs = new HashMap<>(keys.size());
         for (String key : keys) {
             ConfDTO conf = ConfCache.get(key);
             mirrorConfs.put(key, conf.getValue() != null ? conf.getValue() : "");
@@ -109,6 +109,7 @@ public class KinConf {
     }
 
     //-----------------------------------------------------------------------------------------------------------
+
     public static String getAppName() {
         return appName;
     }
@@ -130,6 +131,7 @@ public class KinConf {
     }
 
     //--------------------------------------------------api------------------------------------------------------
+
     public static String get(String key, String defaultVal) {
         //level 1: cache
         ConfDTO conf = ConfCache.get(key);

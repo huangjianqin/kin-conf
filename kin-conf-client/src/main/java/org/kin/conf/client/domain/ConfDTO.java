@@ -18,6 +18,7 @@ public class ConfDTO {
     }
 
     //setter && getter
+
     public String getKey() {
         return key;
     }

@@ -14,6 +14,7 @@ public class ConfListResponse {
     private long totalCount;
 
     //setter && getter
+
     public List<Conf> getData() {
         return data;
     }

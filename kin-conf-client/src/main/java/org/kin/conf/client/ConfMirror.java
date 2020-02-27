@@ -4,6 +4,7 @@ import org.kin.conf.client.domain.ConfDTO;
 import org.kin.framework.utils.CollectionUtils;
 import org.kin.framework.utils.PropertiesUtils;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -22,9 +23,10 @@ class ConfMirror {
     }
 
     static Map<String, String> mirrorConfs() {
-        Map<String, String> mirrorConfs = new HashMap<>();
         Properties properties = PropertiesUtils.loadFileProperties(KinConf.getMirrorFile());
+        Map<String, String> mirrorConfs = Collections.emptyMap();
         if (properties != null && CollectionUtils.isNonEmpty(properties.stringPropertyNames())) {
+            mirrorConfs = new HashMap<>(properties.size());
             for (String name : properties.stringPropertyNames()) {
                 mirrorConfs.put(name, properties.getProperty(name));
             }

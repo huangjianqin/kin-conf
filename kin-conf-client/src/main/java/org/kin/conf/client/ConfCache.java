@@ -35,7 +35,7 @@ class ConfCache {
         }
 
         if (CollectionUtils.isNonEmpty(initConfs)) {
-            Map<String, String> newMirrorConfs = new HashMap<>();
+            Map<String, String> newMirrorConfs = new HashMap<>(initConfs.size());
             for (Map.Entry<String, String> entry : initConfs.entrySet()) {
                 if (Objects.nonNull(entry.getValue())) {
                     CACHE.put(entry.getKey(), new ConfDTO(entry.getKey(), entry.getValue()));
