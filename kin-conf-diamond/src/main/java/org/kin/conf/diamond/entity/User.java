@@ -27,9 +27,9 @@ public class User implements Serializable {
     private String name;
     @Column(columnDefinition = "tinyint(4) NOT NULL DEFAULT '0' COMMENT '权限：0-普通用户、1-管理员'")
     private int permission;
+    /** 格式"appname#env#env01,appname#env02" */
     @Column(columnDefinition = "varchar(1000) DEFAULT NULL COMMENT '权限配置数据'")
     @Convert(converter = JpaPermissionStrConverter.class)
-    /** 格式"appname#env#env01,appname#env02" */
     private Map<String, List<String>> permissionData = new HashMap<>();
 
     public boolean isUser() {
@@ -42,13 +42,9 @@ public class User implements Serializable {
 
     public boolean hasPermission(String appName, String env) {
         List<String> envs;
-        if (permissionData.containsKey(appName) &&
+        return permissionData.containsKey(appName) &&
                 CollectionUtils.isNonEmpty((envs = permissionData.get(appName))) &&
-                envs.contains(env)) {
-            return true;
-        }
-
-        return false;
+                envs.contains(env);
     }
 
     public boolean addOrChangePermission(Map<String, List<String>> appName2Envs) {

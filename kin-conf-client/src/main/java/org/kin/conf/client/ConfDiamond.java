@@ -50,15 +50,15 @@ class ConfDiamond {
      * 合并http请求配置数据
      */
     static ConfDTO mergeGet(String key) {
-        Future<Map<String, String>> future = null;
+        Future<Map<String, String>> future;
         synchronized (lock) {
             keyPool.add(key);
             if (ConfDiamond.future == null) {
                 ConfDiamond.future = executor.schedule(() -> {
-                    Set<String> reqKeys = new HashSet<>();
+                    Set<String> reqKeys;
                     synchronized (lock) {
                         ConfDiamond.future = null;
-                        reqKeys.addAll(ConfDiamond.keyPool);
+                        reqKeys = new HashSet<>(ConfDiamond.keyPool);
                         ConfDiamond.keyPool = new HashSet<>();
                     }
                     return get(reqKeys);
@@ -66,7 +66,7 @@ class ConfDiamond {
             }
             future = ConfDiamond.future;
         }
-        while (future != null && !future.isDone()) {
+        while (!future.isDone()) {
             try {
                 Thread.sleep(50);
             } catch (InterruptedException e) {

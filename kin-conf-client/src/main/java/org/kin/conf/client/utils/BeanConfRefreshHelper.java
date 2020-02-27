@@ -22,9 +22,9 @@ public class BeanConfRefreshHelper {
     public static void refreshBeanField(ApplicationContext context, BeanConfWrapper wrapper, String value, Object bean) {
         if (bean == null) {
             bean = context.getBean(wrapper.getBeanName());
-        }
-        if (bean == null) {
-            return;
+            if (bean == null) {
+                return;
+            }
         }
 
         String fieldName = wrapper.getFieldName();

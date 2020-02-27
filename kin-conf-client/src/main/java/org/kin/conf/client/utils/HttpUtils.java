@@ -22,8 +22,8 @@ public class HttpUtils {
     /**
      * 与原实例共享线程池、连接池和其他设置项，只需进行少量配置就可以实现特殊需求
      * .newBuilder()
-     */
-    /**
+     *
+     * ---
      * 最好只使用一个共享的OkHttpClient实例，将所有的网络请求都通过这个实例处理。因为每个OkHttpClient 实例都有自己的连接池和线程池，重用这个实例能降低延时，减少内存消耗，而重复创建新实例则会浪费资源。
      * OkHttpClient的线程池和连接池在空闲的时候会自动释放，所以一般情况下不需要手动关闭，但是如果出现极端内存不足的情况，可以使用以下代码释放内存：
      */
@@ -71,7 +71,7 @@ public class HttpUtils {
                 .post(body)
                 .build();
         try (Response response = CLIENT.newCall(request).execute()) {
-            if (response.isSuccessful()) {
+            if (response.isSuccessful() && response.body() != null) {
                 return response.body().string();
             }
         } catch (IOException e) {

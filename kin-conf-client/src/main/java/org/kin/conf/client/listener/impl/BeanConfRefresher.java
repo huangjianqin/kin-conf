@@ -25,7 +25,7 @@ public class BeanConfRefresher implements ConfChangeListener {
 
     public void watch(String key, BeanConfWrapper wrapper) {
         key = key.trim();
-        synchronized (key) {
+        synchronized (this) {
             List<BeanConfWrapper> wrappers = beanConfs.get(key);
             if (wrappers == null) {
                 wrappers = new ArrayList<>();

@@ -85,15 +85,12 @@ public class KinConf {
                     String value = diamondConfs.get(key);
 
                     ConfDTO conf = ConfCache.get(key);
-                    if (conf != null && conf.getValue() != null && conf.getValue().equals(value)) {
-                        //配置没有发生变化
-                    } else {
+                    if (conf == null || conf.getValue() == null || !conf.getValue().equals(value)) {
                         //配置变化, 并触发listener
                         ConfCache.put(key, value);
 
                         ConfListenerManager.onConfChange(key, value);
                     }
-
                 }
             }
         }

@@ -48,13 +48,13 @@ public class DiamondService implements InitializingBean, DisposableBean {
     private Keeper.KeeperStopper duplicateKeeper;
 
     @Override
-    public void destroy() throws Exception {
+    public void destroy() {
         msgHandleKeeper.stopKeeper();
         duplicateKeeper.stopKeeper();
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         readedMsgIds = Collections.synchronizedList(new ArrayList<>());
         msgHandleKeeper = Keeper.keep(() -> {
             List<ConfMsg> confMsgs;

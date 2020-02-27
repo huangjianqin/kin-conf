@@ -34,7 +34,7 @@ public class ConfListenerManager {
             log.error(e.getMessage(), e);
         }
 
-        synchronized (key) {
+        synchronized (ConfListenerManager.class) {
             List<ConfChangeListener> listeners = LISTENERS.get(key);
             if (listeners == null) {
                 listeners = new ArrayList<>();

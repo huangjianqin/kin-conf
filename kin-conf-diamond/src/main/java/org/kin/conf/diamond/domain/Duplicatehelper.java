@@ -90,15 +90,17 @@ public class Duplicatehelper implements DisposableBean {
         for (Map.Entry<String, Collection<String>> entry : cacheUniqueKey2Confs.asMap().entrySet()) {
             Properties properties = getProperties(entry.getKey());
 
-            List<String> removeKeys = new ArrayList<>();
-            for (String key : properties.stringPropertyNames()) {
-                if (!entry.getValue().contains(key)) {
-                    removeKeys.add(key);
+            if (Objects.nonNull(properties)) {
+                List<String> removeKeys = new ArrayList<>();
+                for (String key : properties.stringPropertyNames()) {
+                    if (!entry.getValue().contains(key)) {
+                        removeKeys.add(key);
+                    }
                 }
-            }
 
-            for (String removeKey : removeKeys) {
-                properties.remove(removeKey);
+                for (String removeKey : removeKeys) {
+                    properties.remove(removeKey);
+                }
             }
         }
 
@@ -110,7 +112,7 @@ public class Duplicatehelper implements DisposableBean {
     }
 
     @Override
-    public void destroy() throws Exception {
+    public void destroy() {
         flush();
     }
 }

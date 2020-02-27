@@ -16,6 +16,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author huangjianqin
@@ -90,10 +91,11 @@ public class AdminServiceImpl implements AdminService {
             return CommonResponse.fail("没有权限删除该配置");
         }
 
-        Conf conf = confDao.findById(new ConfUniqueKey(appName, env, key)).get();
-        if (conf == null) {
+        Optional<Conf> confOptional = confDao.findById(new ConfUniqueKey(appName, env, key));
+        if (!confOptional.isPresent()) {
             return CommonResponse.fail("配置不存在");
         }
+        Conf conf = confOptional.get();
 
         confDao.delete(conf);
         //log
@@ -148,9 +150,7 @@ public class AdminServiceImpl implements AdminService {
             conf.setValue("");
         }
 
-        if (confDao.save(conf) == null) {
-            return CommonResponse.fail("添加配置异常");
-        }
+        confDao.save(conf);
 
         //log
         ConfLog confLog = ConfLog.logAdd(conf.getEnv(), conf.getKeyV(), conf.getAppName(), conf.getDescription(), conf.getValue(), user.getAccount());
@@ -195,9 +195,7 @@ public class AdminServiceImpl implements AdminService {
 
         dbConf.setDescription(conf.getDescription());
         dbConf.setValue(conf.getValue());
-        if (confDao.save(dbConf) == null) {
-            return CommonResponse.fail("更新配置异常");
-        }
+        confDao.save(dbConf);
 
         //log
         ConfLog confLog = ConfLog.logUpdate(conf.getEnv(), conf.getKeyV(), conf.getAppName(), conf.getDescription(), conf.getValue(), user.getAccount());
@@ -233,7 +231,7 @@ public class AdminServiceImpl implements AdminService {
             }
 
             String value = "";
-            if (key != null && 4 <= key.length() || key.length() <= 100) {
+            if (key != null && (4 <= key.length() || key.length() <= 100)) {
                 value = diamondService.get(appName, env, key);
             }
 
@@ -270,7 +268,7 @@ public class AdminServiceImpl implements AdminService {
                 key = key.trim();
             }
 
-            if (key != null && 4 <= key.length() || key.length() <= 100) {
+            if (key != null && (4 <= key.length() || key.length() <= 100)) {
                 MonitorData.add(appName, env, key, deferredResult);
             }
         }

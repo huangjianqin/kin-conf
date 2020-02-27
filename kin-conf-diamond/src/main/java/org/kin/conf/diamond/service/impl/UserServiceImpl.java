@@ -35,8 +35,7 @@ public class UserServiceImpl implements UserService {
         } catch (JsonProcessingException e) {
             ExceptionUtils.log(e);
         }
-        String tokenHex = new BigInteger(tokenJson.getBytes()).toString(16);
-        return tokenHex;
+        return new BigInteger(tokenJson.getBytes()).toString(16);
     }
 
     private User parseToken(String tokenHex) {
