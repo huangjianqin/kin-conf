@@ -164,7 +164,7 @@ public class KinConf {
         if (value == null) {
             throw new ConfNotExistException(key);
         }
-        return Boolean.valueOf(value);
+        return Boolean.parseBoolean(value);
     }
 
     public static short getShort(String key) {
@@ -172,7 +172,7 @@ public class KinConf {
         if (value == null) {
             throw new ConfNotExistException(key);
         }
-        return Short.valueOf(value);
+        return Short.parseShort(value);
     }
 
     public static int getInt(String key) {
@@ -180,7 +180,7 @@ public class KinConf {
         if (value == null) {
             throw new ConfNotExistException(key);
         }
-        return Integer.valueOf(value);
+        return Integer.parseInt(value);
     }
 
     public static long getLong(String key) {
@@ -188,7 +188,7 @@ public class KinConf {
         if (value == null) {
             throw new ConfNotExistException(key);
         }
-        return Long.valueOf(value);
+        return Long.parseLong(value);
     }
 
     public static float getFloat(String key) {
@@ -196,7 +196,7 @@ public class KinConf {
         if (value == null) {
             throw new ConfNotExistException(key);
         }
-        return Float.valueOf(value);
+        return Float.parseFloat(value);
     }
 
     public static double getDouble(String key) {
@@ -204,6 +204,6 @@ public class KinConf {
         if (value == null) {
             throw new ConfNotExistException(key);
         }
-        return Double.valueOf(value);
+        return Double.parseDouble(value);
     }
 }

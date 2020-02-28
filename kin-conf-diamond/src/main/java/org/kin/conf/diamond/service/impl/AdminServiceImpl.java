@@ -231,7 +231,7 @@ public class AdminServiceImpl implements AdminService {
             }
 
             String value = "";
-            if (key != null && (4 <= key.length() || key.length() <= 100)) {
+            if (key != null && (4 <= key.length() && key.length() <= 100)) {
                 value = diamondService.get(appName, env, key);
             }
 
@@ -268,7 +268,7 @@ public class AdminServiceImpl implements AdminService {
                 key = key.trim();
             }
 
-            if (key != null && (4 <= key.length() || key.length() <= 100)) {
+            if (key != null && (4 <= key.length() && key.length() <= 100)) {
                 MonitorData.add(appName, env, key, deferredResult);
             }
         }
