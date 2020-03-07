@@ -1,6 +1,6 @@
 package org.kin.conf.diamond.service;
 
-import org.kin.conf.diamond.domain.CommonResponse;
+import org.kin.conf.diamond.domain.WebResponse;
 import org.kin.conf.diamond.entity.User;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +19,7 @@ public interface UserService {
      * @param password 密码
      * @return 登陆结果
      */
-    CommonResponse<String> login(HttpServletResponse response, String account, String password);
+    WebResponse<String> login(HttpServletResponse response, String account, String password);
 
     /**
      * 获取会话登陆中的用户

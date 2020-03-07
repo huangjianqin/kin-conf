@@ -1,8 +1,8 @@
 package org.kin.conf.diamond.controller;
 
 import org.kin.conf.diamond.dao.ProjectDao;
-import org.kin.conf.diamond.domain.CommonResponse;
 import org.kin.conf.diamond.domain.Permission;
+import org.kin.conf.diamond.domain.WebResponse;
 import org.kin.conf.diamond.entity.Project;
 import org.kin.conf.diamond.utils.SpecialStrChecker;
 import org.kin.framework.utils.StringUtils;
@@ -27,71 +27,71 @@ public class ProjectController {
     @RequestMapping("/add")
     @ResponseBody
     @Permission
-    public CommonResponse<String> add(HttpServletRequest request, Project project) {
+    public WebResponse<String> add(HttpServletRequest request, Project project) {
         if (StringUtils.isBlank(project.getAppName())) {
-            return CommonResponse.fail("应用名不能为空");
+            return WebResponse.fail("应用名不能为空");
         }
 
         //不能包含特殊字符
         if (!SpecialStrChecker.check(project.getAppName())) {
-            return CommonResponse.fail("应用名非法");
+            return WebResponse.fail("应用名非法");
         }
 
         if (StringUtils.isBlank(project.getTitle())) {
-            return CommonResponse.fail("应用标题不能为空");
+            return WebResponse.fail("应用标题不能为空");
         }
 
         Optional<Project> optional = projectDao.findById(project.getAppName());
         if (optional.isPresent()) {
-            return CommonResponse.fail("应用已存在");
+            return WebResponse.fail("应用已存在");
         }
 
         projectDao.save(project);
 
-        return CommonResponse.success();
+        return WebResponse.success();
     }
 
     @RequestMapping("/delete")
     @ResponseBody
     @Permission
-    public CommonResponse<String> delete(HttpServletRequest request, String appName) {
+    public WebResponse<String> delete(HttpServletRequest request, String appName) {
         if (StringUtils.isBlank(appName)) {
-            return CommonResponse.fail("应用名不能为空");
+            return WebResponse.fail("应用名不能为空");
         }
 
         Optional<Project> optional = projectDao.findById(appName);
         if (!optional.isPresent()) {
-            return CommonResponse.fail("应用不存在");
+            return WebResponse.fail("应用不存在");
         }
 
         Project dbProject = optional.get();
 
         projectDao.delete(dbProject);
 
-        return CommonResponse.success();
+        return WebResponse.success();
     }
 
     @RequestMapping("/update")
     @ResponseBody
     @Permission
-    public CommonResponse<String> update(HttpServletRequest request, Project project) {
+    public WebResponse<String> update(HttpServletRequest request, Project project) {
         if (StringUtils.isBlank(project.getAppName())) {
-            return CommonResponse.fail("应用名不能为空");
+            return WebResponse.fail("应用名不能为空");
         }
 
         if (StringUtils.isBlank(project.getTitle())) {
-            return CommonResponse.fail("应用标题不能为空");
+            return WebResponse.fail("应用标题不能为空");
         }
 
         Optional<Project> optional = projectDao.findById(project.getAppName());
         if (!optional.isPresent()) {
-            return CommonResponse.fail("应用不存在");
+            return WebResponse.fail("应用不存在");
         }
 
         Project dbProject = optional.get();
         dbProject.setTitle(project.getTitle());
         projectDao.save(dbProject);
 
-        return CommonResponse.success();
+        return WebResponse.success();
     }
 }

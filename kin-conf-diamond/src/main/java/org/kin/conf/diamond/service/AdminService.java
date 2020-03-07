@@ -1,7 +1,7 @@
 package org.kin.conf.diamond.service;
 
-import org.kin.conf.diamond.domain.CommonResponse;
 import org.kin.conf.diamond.domain.ConfListResponse;
+import org.kin.conf.diamond.domain.WebResponse;
 import org.kin.conf.diamond.entity.Conf;
 import org.kin.conf.diamond.entity.User;
 import org.springframework.web.context.request.async.DeferredResult;
@@ -32,7 +32,7 @@ public interface AdminService {
      * @param key 配置key
      * @return 删除配置结果
      */
-    CommonResponse<String> delete(User user, String appName, String env, String key);
+    WebResponse<String> delete(User user, String appName, String env, String key);
 
     /**
      * 增加配置
@@ -40,7 +40,7 @@ public interface AdminService {
      * @param conf 配置信息
      * @return 增加配置结果
      */
-    CommonResponse<String> add(User user, Conf conf);
+    WebResponse<String> add(User user, Conf conf);
 
     /**
      * 更新配置
@@ -48,7 +48,7 @@ public interface AdminService {
      * @param conf 配置信息
      * @return 更新配置结果
      */
-    CommonResponse<String> update(User user, Conf conf);
+    WebResponse<String> update(User user, Conf conf);
 
     /**
      * 获取配置
@@ -57,7 +57,7 @@ public interface AdminService {
      * @param keys 配置keys
      * @return 配置keys对应的配置s
      */
-    CommonResponse<Map<String, String>> getConfs(String appName, String env, List<String> keys);
+    WebResponse<Map<String, String>> getConfs(String appName, String env, List<String> keys);
 
     /**
      * 监听配置变化
@@ -66,5 +66,5 @@ public interface AdminService {
      * @param keys 配置keys
      * @return 配置keys对应的配置信息变化s
      */
-    DeferredResult<CommonResponse<String>> monitor(String appName, String env, List<String> keys);
+    DeferredResult<WebResponse<String>> monitor(String appName, String env, List<String> keys);
 }

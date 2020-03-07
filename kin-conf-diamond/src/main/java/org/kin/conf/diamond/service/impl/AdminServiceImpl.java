@@ -73,27 +73,27 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public CommonResponse<String> delete(User user, String appName, String env, String key) {
+    public WebResponse<String> delete(User user, String appName, String env, String key) {
         if (StringUtils.isBlank(appName)) {
-            return CommonResponse.fail("应用不能为空");
+            return WebResponse.fail("应用不能为空");
         }
 
         if (StringUtils.isBlank(key)) {
-            return CommonResponse.fail("配置key不能为空");
+            return WebResponse.fail("配置key不能为空");
         }
 
         if (StringUtils.isBlank(env)) {
-            return CommonResponse.fail("配置环境不能为空");
+            return WebResponse.fail("配置环境不能为空");
         }
 
         //校验权限
         if (!user.hasPermission(appName, env)) {
-            return CommonResponse.fail("没有权限删除该配置");
+            return WebResponse.fail("没有权限删除该配置");
         }
 
         Optional<Conf> confOptional = confDao.findById(new ConfUniqueKey(appName, env, key));
         if (!confOptional.isPresent()) {
-            return CommonResponse.fail("配置不存在");
+            return WebResponse.fail("配置不存在");
         }
         Conf conf = confOptional.get();
 
@@ -104,46 +104,46 @@ public class AdminServiceImpl implements AdminService {
 
         sendConfMsg(conf.getAppName(), conf.getEnv(), conf.getKeyV(), null);
 
-        return CommonResponse.success();
+        return WebResponse.success();
     }
 
     @Override
-    public CommonResponse<String> add(User user, Conf conf) {
+    public WebResponse<String> add(User user, Conf conf) {
         if (StringUtils.isBlank(conf.getDescription())) {
-            return CommonResponse.fail("描述不能为空");
+            return WebResponse.fail("描述不能为空");
         }
 
         if (StringUtils.isBlank(conf.getAppName())) {
-            return CommonResponse.fail("应用名不能为空");
+            return WebResponse.fail("应用名不能为空");
         }
 
         Project project = projectDao.findById(conf.getAppName()).orElse(null);
         if (project == null) {
-            return CommonResponse.fail("应用不存在");
+            return WebResponse.fail("应用不存在");
         }
 
         if (StringUtils.isBlank(conf.getEnv())) {
-            return CommonResponse.fail("环境不能为空");
+            return WebResponse.fail("环境不能为空");
         }
 
         Env env = envDao.findById(conf.getEnv()).orElse(null);
         if (env == null) {
-            return CommonResponse.fail("环境不存在");
+            return WebResponse.fail("环境不存在");
         }
 
         //校验权限
         if (!user.hasPermission(conf.getAppName(), conf.getEnv())) {
-            return CommonResponse.fail("没有权限添加配置");
+            return WebResponse.fail("没有权限添加配置");
         }
 
         if (StringUtils.isBlank(conf.getKeyV())) {
-            return CommonResponse.fail("key不能为空");
+            return WebResponse.fail("key不能为空");
         }
         conf.setKeyV(conf.getKeyV().trim());
 
         Conf dbConf = confDao.findById(new ConfUniqueKey(conf.getAppName(), conf.getEnv(), conf.getKeyV())).orElse(null);
         if (dbConf != null) {
-            return CommonResponse.fail("配置已存在, 不能重复添加");
+            return WebResponse.fail("配置已存在, 不能重复添加");
         }
 
         if (conf.getValue() == null) {
@@ -158,35 +158,35 @@ public class AdminServiceImpl implements AdminService {
 
         sendConfMsg(conf.getAppName(), conf.getEnv(), conf.getKeyV(), conf.getValue());
 
-        return CommonResponse.success();
+        return WebResponse.success();
     }
 
     @Override
-    public CommonResponse<String> update(User user, Conf conf) {
+    public WebResponse<String> update(User user, Conf conf) {
         if (StringUtils.isBlank(conf.getDescription())) {
-            return CommonResponse.fail("描述不能为空");
+            return WebResponse.fail("描述不能为空");
         }
 
         if (StringUtils.isBlank(conf.getKeyV())) {
-            return CommonResponse.fail("key不能为空");
+            return WebResponse.fail("key不能为空");
         }
 
         if (StringUtils.isBlank(conf.getAppName())) {
-            return CommonResponse.fail("应用不能为空");
+            return WebResponse.fail("应用不能为空");
         }
 
         if (StringUtils.isBlank(conf.getEnv())) {
-            return CommonResponse.fail("配置环境不能为空");
+            return WebResponse.fail("配置环境不能为空");
         }
 
         //校验权限
         if (!user.hasPermission(conf.getAppName(), conf.getEnv())) {
-            return CommonResponse.fail("没有权限删除该配置");
+            return WebResponse.fail("没有权限删除该配置");
         }
 
         Conf dbConf = confDao.findById(new ConfUniqueKey(conf.getAppName(), conf.getEnv(), conf.getKeyV())).orElse(null);
         if (dbConf == null) {
-            return CommonResponse.fail("配置不存在");
+            return WebResponse.fail("配置不存在");
         }
 
         if (conf.getValue() == null) {
@@ -203,25 +203,25 @@ public class AdminServiceImpl implements AdminService {
 
         sendConfMsg(dbConf.getAppName(), dbConf.getEnv(), dbConf.getKeyV(), dbConf.getValue());
 
-        return CommonResponse.success();
+        return WebResponse.success();
     }
 
     //-----------------------------------------------------------------rest api-----------------------------------------
 
     @Override
-    public CommonResponse<Map<String, String>> getConfs(String appName, String env, List<String> keys) {
+    public WebResponse<Map<String, String>> getConfs(String appName, String env, List<String> keys) {
         if (StringUtils.isBlank(appName)) {
-            return CommonResponse.fail("应用不能为空");
+            return WebResponse.fail("应用不能为空");
         }
         appName = appName.trim();
 
         if (StringUtils.isBlank(env)) {
-            return CommonResponse.fail("环境不能为空");
+            return WebResponse.fail("环境不能为空");
         }
         env = env.trim();
 
         if (CollectionUtils.isEmpty(keys)) {
-            return CommonResponse.fail("请求key列表不能为空");
+            return WebResponse.fail("请求key列表不能为空");
         }
 
         Map<String, String> result = new HashMap<>(keys.size());
@@ -238,28 +238,28 @@ public class AdminServiceImpl implements AdminService {
             result.put(key, value);
         }
 
-        return CommonResponse.success(result);
+        return WebResponse.success(result);
     }
 
     @Override
-    public DeferredResult<CommonResponse<String>> monitor(String appName, String env, List<String> keys) {
-        DeferredResult<CommonResponse<String>> deferredResult = new DeferredResult(10000L,
-                CommonResponse.<String>success("monitor timeout, no key value update"));
+    public DeferredResult<WebResponse<String>> monitor(String appName, String env, List<String> keys) {
+        DeferredResult<WebResponse<String>> deferredResult = new DeferredResult(10000L,
+                WebResponse.<String>success("monitor timeout, no key value update"));
 
         if (StringUtils.isBlank(appName)) {
-            deferredResult.setResult(CommonResponse.fail("应用不能为空"));
+            deferredResult.setResult(WebResponse.fail("应用不能为空"));
             return deferredResult;
         }
         appName = appName.trim();
 
         if (StringUtils.isBlank(env)) {
-            deferredResult.setResult(CommonResponse.fail("环境不能为空"));
+            deferredResult.setResult(WebResponse.fail("环境不能为空"));
             return deferredResult;
         }
         env = env.trim();
 
         if (CollectionUtils.isEmpty(keys)) {
-            deferredResult.setResult(CommonResponse.fail("请求key列表不能为空"));
+            deferredResult.setResult(WebResponse.fail("请求key列表不能为空"));
             return deferredResult;
         }
         

@@ -1,8 +1,8 @@
 package org.kin.conf.diamond.controller;
 
-import org.kin.conf.diamond.domain.CommonResponse;
 import org.kin.conf.diamond.domain.CookieKey;
 import org.kin.conf.diamond.domain.Permission;
+import org.kin.conf.diamond.domain.WebResponse;
 import org.kin.conf.diamond.service.UserService;
 import org.kin.conf.diamond.utils.CookieUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +25,15 @@ public class DiamondController {
 
     @RequestMapping("/login")
     @ResponseBody
-    public CommonResponse<String> login(HttpServletRequest request, HttpServletResponse response, String account, String password) {
+    public WebResponse<String> login(HttpServletRequest request, HttpServletResponse response, String account, String password) {
         return userService.login(response, account, password);
     }
 
     @RequestMapping("/logout")
     @ResponseBody
     @Permission
-    public CommonResponse<String> login(HttpServletRequest request, HttpServletResponse response) {
+    public WebResponse<String> login(HttpServletRequest request, HttpServletResponse response) {
         CookieUtils.remove(request, response, CookieKey.LOGIN_IDENTITY);
-        return CommonResponse.success();
+        return WebResponse.success();
     }
 }

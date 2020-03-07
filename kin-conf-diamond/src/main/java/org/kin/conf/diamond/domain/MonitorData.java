@@ -16,16 +16,16 @@ public class MonitorData {
 
     }
 
-    private static Map<String, List<DeferredResult<CommonResponse<String>>>> deferredResultMap = new ConcurrentHashMap<>();
+    private static Map<String, List<DeferredResult<WebResponse<String>>>> deferredResultMap = new ConcurrentHashMap<>();
 
 
     private static String key(String appName, String env, String key) {
         return appName + env + key;
     }
 
-    public static void add(String appName, String env, String key, DeferredResult<CommonResponse<String>> deferredResult) {
+    public static void add(String appName, String env, String key, DeferredResult<WebResponse<String>> deferredResult) {
         String mapKey = key(appName, env, key);
-        List<DeferredResult<CommonResponse<String>>> list = deferredResultMap.get(mapKey);
+        List<DeferredResult<WebResponse<String>>> list = deferredResultMap.get(mapKey);
         if (list == null) {
             list = new ArrayList<>();
         }
@@ -34,12 +34,12 @@ public class MonitorData {
         deferredResultMap.put(key, list);
     }
 
-    public static List<DeferredResult<CommonResponse<String>>> get(String appName, String env, String key) {
+    public static List<DeferredResult<WebResponse<String>>> get(String appName, String env, String key) {
         String mapKey = key(appName, env, key);
         return deferredResultMap.get(mapKey);
     }
 
-    public static List<DeferredResult<CommonResponse<String>>> remove(String appName, String env, String key) {
+    public static List<DeferredResult<WebResponse<String>>> remove(String appName, String env, String key) {
         String mapKey = key(appName, env, key);
         return deferredResultMap.remove(mapKey);
     }

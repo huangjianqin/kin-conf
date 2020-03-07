@@ -1,8 +1,8 @@
 package org.kin.conf.diamond.controller;
 
 import org.kin.conf.diamond.dao.EnvDao;
-import org.kin.conf.diamond.domain.CommonResponse;
 import org.kin.conf.diamond.domain.Permission;
+import org.kin.conf.diamond.domain.WebResponse;
 import org.kin.conf.diamond.entity.Env;
 import org.kin.conf.diamond.utils.SpecialStrChecker;
 import org.kin.framework.utils.StringUtils;
@@ -27,65 +27,65 @@ public class EnvController {
     @RequestMapping("/add")
     @ResponseBody
     @Permission
-    public CommonResponse<String> add(HttpServletRequest request, Env env) {
+    public WebResponse<String> add(HttpServletRequest request, Env env) {
         if (StringUtils.isBlank(env.getEnv())) {
-            return CommonResponse.fail("环境名不能为空");
+            return WebResponse.fail("环境名不能为空");
         }
 
         //不能包含特殊字符
         if (!SpecialStrChecker.check(env.getEnv())) {
-            return CommonResponse.fail("环境名非法");
+            return WebResponse.fail("环境名非法");
         }
 
         if (StringUtils.isBlank(env.getDescription())) {
-            return CommonResponse.fail("环境描述不能为空");
+            return WebResponse.fail("环境描述不能为空");
         }
 
         Optional<Env> optional = envDao.findById(env.getEnv());
         if (optional.isPresent()) {
-            return CommonResponse.fail("环境已存在");
+            return WebResponse.fail("环境已存在");
         }
 
         envDao.save(env);
 
-        return CommonResponse.success();
+        return WebResponse.success();
     }
 
     @RequestMapping("/delete")
     @ResponseBody
     @Permission
-    public CommonResponse<String> delete(HttpServletRequest request, String env) {
+    public WebResponse<String> delete(HttpServletRequest request, String env) {
         if (StringUtils.isBlank(env)) {
-            return CommonResponse.fail("环境不能为空");
+            return WebResponse.fail("环境不能为空");
         }
 
         Optional<Env> optional = envDao.findById(env);
         if (!optional.isPresent()) {
-            return CommonResponse.fail("环境不存在");
+            return WebResponse.fail("环境不存在");
         }
 
         Env dbEnv = optional.get();
 
         envDao.delete(dbEnv);
 
-        return CommonResponse.success();
+        return WebResponse.success();
     }
 
     @RequestMapping("/update")
     @ResponseBody
     @Permission
-    public CommonResponse<String> update(HttpServletRequest request, Env env) {
+    public WebResponse<String> update(HttpServletRequest request, Env env) {
         if (StringUtils.isBlank(env.getEnv())) {
-            return CommonResponse.fail("环境不能为空");
+            return WebResponse.fail("环境不能为空");
         }
 
         if (StringUtils.isBlank(env.getDescription())) {
-            return CommonResponse.fail("环境描述不能为空");
+            return WebResponse.fail("环境描述不能为空");
         }
 
         Optional<Env> optional = envDao.findById(env.getEnv());
         if (!optional.isPresent()) {
-            return CommonResponse.fail("环境不存在");
+            return WebResponse.fail("环境不存在");
         }
 
         Env dbEnv = optional.get();
@@ -94,6 +94,6 @@ public class EnvController {
 
         envDao.save(dbEnv);
 
-        return CommonResponse.success();
+        return WebResponse.success();
     }
 }

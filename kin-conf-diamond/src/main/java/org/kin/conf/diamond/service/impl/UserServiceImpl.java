@@ -2,8 +2,8 @@ package org.kin.conf.diamond.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.kin.conf.diamond.dao.UserDao;
-import org.kin.conf.diamond.domain.CommonResponse;
 import org.kin.conf.diamond.domain.CookieKey;
+import org.kin.conf.diamond.domain.WebResponse;
 import org.kin.conf.diamond.entity.User;
 import org.kin.conf.diamond.service.UserService;
 import org.kin.conf.diamond.utils.CookieUtils;
@@ -53,30 +53,30 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public CommonResponse<String> login(HttpServletResponse response, String account, String password) {
+    public WebResponse<String> login(HttpServletResponse response, String account, String password) {
         if (StringUtils.isBlank(account)) {
-            return CommonResponse.fail("账号不能为空");
+            return WebResponse.fail("账号不能为空");
         }
 
         if (StringUtils.isBlank(password)) {
-            return CommonResponse.fail("密码不能为空");
+            return WebResponse.fail("密码不能为空");
         }
 
         Optional<User> optional = userDao.findById(account);
         if (!optional.isPresent()) {
-            return CommonResponse.fail("用户不存在");
+            return WebResponse.fail("用户不存在");
         }
 
         User dbUser = optional.get();
         password = DigestUtils.md5DigestAsHex(password.getBytes());
         if (!dbUser.getPassword().equals(password)) {
-            return CommonResponse.fail("密码错误");
+            return WebResponse.fail("密码错误");
         }
 
         String token = makeToken(dbUser);
         CookieUtils.set(response, CookieKey.LOGIN_IDENTITY, token, true);
 
-        return CommonResponse.success();
+        return WebResponse.success();
     }
 
     @Override

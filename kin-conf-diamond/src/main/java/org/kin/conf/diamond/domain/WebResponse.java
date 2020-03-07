@@ -4,7 +4,7 @@ package org.kin.conf.diamond.domain;
  * @author huangjianqin
  * @date 2019/7/14
  */
-public class CommonResponse<T> {
+public class WebResponse<T> {
     public static final int SUCCESS_CODE = 200;
     public static final int FAIL_CODE = 500;
 
@@ -12,37 +12,37 @@ public class CommonResponse<T> {
     private String msg;
     private T data;
 
-    public CommonResponse() {
+    public WebResponse() {
     }
 
-    public CommonResponse(int code, String msg, T data) {
+    public WebResponse(int code, String msg, T data) {
         this.code = code;
         this.msg = msg;
         this.data = data;
     }
 
-    public static <T> CommonResponse<T> success() {
+    public static <T> WebResponse<T> success() {
         return success(null);
     }
 
-    public static <T> CommonResponse<T> success(String msg) {
+    public static <T> WebResponse<T> success(String msg) {
         return success(msg, null);
     }
 
-    public static <T> CommonResponse<T> success(T data) {
+    public static <T> WebResponse<T> success(T data) {
         return success("", data);
     }
 
-    public static <T> CommonResponse<T> success(String msg, T data) {
-        return new CommonResponse<>(SUCCESS_CODE, msg, data);
+    public static <T> WebResponse<T> success(String msg, T data) {
+        return new WebResponse<>(SUCCESS_CODE, msg, data);
     }
 
-    public static <T> CommonResponse<T> fail(String msg) {
+    public static <T> WebResponse<T> fail(String msg) {
         return fail(msg, null);
     }
 
-    public static <T> CommonResponse<T> fail(String msg, T data) {
-        return new CommonResponse<>(FAIL_CODE, msg, data);
+    public static <T> WebResponse<T> fail(String msg, T data) {
+        return new WebResponse<>(FAIL_CODE, msg, data);
     }
 
     //setter && getter

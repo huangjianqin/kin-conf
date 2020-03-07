@@ -76,10 +76,10 @@ public class DiamondService implements InitializingBean, DisposableBean {
                     //同步到磁盘
                     duplicatehelper.set(confMsg.getAppName(), confMsg.getEnv(), confMsg.getKeyV(), confMsg.getValue());
 
-                    List<DeferredResult<CommonResponse<String>>> deferredResults = MonitorData.remove(confMsg.getAppName(), confMsg.getEnv(), confMsg.getKeyV());
+                    List<DeferredResult<WebResponse<String>>> deferredResults = MonitorData.remove(confMsg.getAppName(), confMsg.getEnv(), confMsg.getKeyV());
                     if (CollectionUtils.isNonEmpty(deferredResults)) {
-                        for (DeferredResult<CommonResponse<String>> deferredResult : deferredResults) {
-                            deferredResult.setResult(CommonResponse.success("monitor key update"));
+                        for (DeferredResult<WebResponse<String>> deferredResult : deferredResults) {
+                            deferredResult.setResult(WebResponse.success("monitor key update"));
                         }
                     }
                 }

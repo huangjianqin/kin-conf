@@ -1,9 +1,9 @@
 package org.kin.conf.diamond.controller;
 
-import org.kin.conf.diamond.domain.CommonResponse;
 import org.kin.conf.diamond.domain.ConfListResponse;
 import org.kin.conf.diamond.domain.FindConfParams;
 import org.kin.conf.diamond.domain.Permission;
+import org.kin.conf.diamond.domain.WebResponse;
 import org.kin.conf.diamond.entity.Conf;
 import org.kin.conf.diamond.service.AdminService;
 import org.kin.conf.diamond.service.UserService;
@@ -43,14 +43,14 @@ public class ConfController {
     @RequestMapping("/delete")
     @ResponseBody
     @Permission
-    public CommonResponse<String> delete(HttpServletRequest request, String appName, String key, String env) {
+    public WebResponse<String> delete(HttpServletRequest request, String appName, String key, String env) {
         return adminService.delete(userService.getUser(request), appName, env, key);
     }
 
     @RequestMapping("/add")
     @ResponseBody
     @Permission
-    public CommonResponse<String> add(HttpServletRequest request, String env, Conf conf) {
+    public WebResponse<String> add(HttpServletRequest request, String env, Conf conf) {
         conf.setEnv(env);
         return adminService.add(userService.getUser(request), conf);
     }
@@ -58,7 +58,7 @@ public class ConfController {
     @RequestMapping("/update")
     @ResponseBody
     @Permission
-    public CommonResponse<String> update(HttpServletRequest request, String env, Conf conf) {
+    public WebResponse<String> update(HttpServletRequest request, String env, Conf conf) {
         conf.setEnv(env);
         return adminService.update(userService.getUser(request), conf);
     }
@@ -68,13 +68,13 @@ public class ConfController {
 
     @RequestMapping(value = "/find")
     @ResponseBody
-    public CommonResponse<Map<String, String>> getConfs(@RequestBody FindConfParams params) {
+    public WebResponse<Map<String, String>> getConfs(@RequestBody FindConfParams params) {
         return adminService.getConfs(params.getAppName(), params.getEnv(), params.getKeys());
     }
 
     @RequestMapping("/monitor")
     @ResponseBody
-    public DeferredResult<CommonResponse<String>> monitor(@RequestBody FindConfParams params) {
+    public DeferredResult<WebResponse<String>> monitor(@RequestBody FindConfParams params) {
         return adminService.monitor(params.getAppName(), params.getEnv(), params.getKeys());
     }
 }
