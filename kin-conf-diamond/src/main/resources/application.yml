@@ -5,7 +5,6 @@ kin:
 
 server:
   port: 8080
-  session-timeout: 60
   tomcat:
     max-threads: 0
     uri-encoding: UTF-8
@@ -13,7 +12,6 @@ server:
 spring:
   http:
     encoding.charset: UTF-8
-    encoding.enable: true
     encoding.force: true
 
   datasource:
@@ -22,23 +20,22 @@ spring:
     username: root
     password: 123456
     driver-class-name: com.mysql.jdbc.Driver
-    initialSize: 0
-    minIdle: 0
-    maxActive: 20
-    # 配置获取连接等待超时的时间
-    maxWait: 60000
-    # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
-    timeBetweenEvictionRunsMillis: 60000
-    # 配置一个连接在池中最小生存的时间，单位是毫秒
-    minEvictableIdleTimeMillis: 300000
-    validationQuery: SELECT 1 FROM DUAL
-    testWhileIdle: true
-    testOnBorrow: false
-    testOnReturn: false
-    # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
-    filters: stat,wall,log4j
-    logSlowSql: true
-    validation-query: SELECT 1
+    druid:
+      initialSize: 0
+      minIdle: 0
+      maxActive: 20
+      # 配置获取连接等待超时的时间
+      maxWait: 10000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      minEvictableIdleTimeMillis: 300000
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+      filters: stat,wall,log4j
+      validation-query: SELECT 1
     # 数据库有表就不执行
     # 可以定义你的建库文件
     schema: classpath:schema.sql
@@ -49,7 +46,7 @@ spring:
     # 每次都初始化
 #    initialization-mode: always
 
-#=====================jpa config================================
+  #hibernate
   jpa:
     database: MYSQL
     # Hibernate ddl auto (create, create-drop, update)
@@ -63,7 +60,7 @@ spring:
         # physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
         # 直接映射
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-      database-platform: org.hibernate.dialect.MySQL5InnoDBDialect  #不加这句则默认为myisam引擎
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect  #不加这句则默认为myisam引擎
     #打印sql语句
     show-sql: false
     properties:
