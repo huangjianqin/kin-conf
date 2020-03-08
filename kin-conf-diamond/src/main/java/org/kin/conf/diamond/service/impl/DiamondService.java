@@ -49,8 +49,8 @@ public class DiamondService implements InitializingBean, DisposableBean {
 
     @Override
     public void destroy() {
-        msgHandleKeeper.stopKeeper();
-        duplicateKeeper.stopKeeper();
+        msgHandleKeeper.stop();
+        duplicateKeeper.stop();
     }
 
     @Override
