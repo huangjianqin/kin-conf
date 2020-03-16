@@ -1,10 +1,10 @@
 package org.kin.conf.client.utils;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 import org.kin.framework.utils.ExceptionUtils;
 import org.kin.framework.utils.JSON;
+import org.kin.framework.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- *
  * @author huangjianqin
  * @date 2019/6/18
  */
@@ -22,7 +21,7 @@ public class HttpUtils {
     /**
      * 与原实例共享线程池、连接池和其他设置项，只需进行少量配置就可以实现特殊需求
      * .newBuilder()
-     *
+     * <p>
      * ---
      * 最好只使用一个共享的OkHttpClient实例，将所有的网络请求都通过这个实例处理。因为每个OkHttpClient 实例都有自己的连接池和线程池，重用这个实例能降低延时，减少内存消耗，而重复创建新实例则会浪费资源。
      * OkHttpClient的线程池和连接池在空闲的时候会自动释放，所以一般情况下不需要手动关闭，但是如果出现极端内存不足的情况，可以使用以下代码释放内存：
@@ -56,12 +55,8 @@ public class HttpUtils {
     }
 
     private static String converterMap2JsonStr(Map<String, Object> params) {
-        try {
-            return JSON.PARSER.writeValueAsString(params);
-        } catch (JsonProcessingException e) {
-            ExceptionUtils.log(e);
-        }
-        return "{}";
+        String json = JSON.write(params);
+        return StringUtils.isNotBlank(json) ? json : "{}";
     }
 
     public static String post(String url, Map<String, Object> params) {

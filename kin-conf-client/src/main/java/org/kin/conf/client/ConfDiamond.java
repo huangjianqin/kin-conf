@@ -4,7 +4,6 @@ import org.kin.conf.client.domain.ConfDTO;
 import org.kin.conf.client.domain.ServerResponse;
 import org.kin.conf.client.utils.HttpUtils;
 import org.kin.framework.JvmCloseCleaner;
-import org.kin.framework.concurrent.SimpleThreadFactory;
 import org.kin.framework.concurrent.ThreadManager;
 import org.kin.framework.utils.ExceptionUtils;
 import org.kin.framework.utils.JSON;
@@ -13,7 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author huangjianqin
@@ -38,12 +39,11 @@ class ConfDiamond {
     private static Object lock = new Object();
     private static volatile HashSet<String> keyPool = new HashSet<>();
     private static Future<Map<String, String>> future = null;
-    private static ThreadManager executor = new ThreadManager(
-            new ThreadPoolExecutor(5, 5, 60, TimeUnit.SECONDS,
-                    new LinkedBlockingQueue<>(), new SimpleThreadFactory("diamond-merge-request-")), 5);
+    private static ThreadManager EXECUTOR =
+            ThreadManager.fix(5, "diamond-merge-request-", 5, "diamond-merge-request-schedule-");
 
     static {
-        JvmCloseCleaner.DEFAULT().add(() -> executor.shutdown());
+        JvmCloseCleaner.DEFAULT().add(() -> EXECUTOR.shutdown());
     }
 
     /**
@@ -54,7 +54,7 @@ class ConfDiamond {
         synchronized (lock) {
             keyPool.add(key);
             if (ConfDiamond.future == null) {
-                ConfDiamond.future = executor.schedule(() -> {
+                ConfDiamond.future = EXECUTOR.schedule(() -> {
                     Set<String> reqKeys;
                     synchronized (lock) {
                         ConfDiamond.future = null;
@@ -108,7 +108,7 @@ class ConfDiamond {
             try {
                 String respJson = HttpUtils.post(requestUrl, params);
                 if (StringUtils.isNotBlank(respJson)) {
-                    ServerResponse response = JSON.PARSER.readValue(respJson, ServerResponse.class);
+                    ServerResponse response = JSON.read(respJson, ServerResponse.class);
                     if (response.getCode() == RESP_SUCCESS_RESULT) {
                         return response.getData();
                     } else {
@@ -133,7 +133,7 @@ class ConfDiamond {
             try {
                 String respJson = HttpUtils.post(requestUrl, params);
                 if (StringUtils.isNotBlank(respJson)) {
-                    ServerResponse response = JSON.PARSER.readValue(respJson, ServerResponse.class);
+                    ServerResponse response = JSON.read(respJson, ServerResponse.class);
                     if (response.getCode() == RESP_SUCCESS_RESULT) {
                         return true;
                     }
