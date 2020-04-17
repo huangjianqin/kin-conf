@@ -1,7 +1,7 @@
 package org.kin.conf.demo;
 
 import org.kin.conf.client.KinConf;
-import org.kin.framework.concurrent.ThreadManager;
+import org.kin.framework.concurrent.ExecutionContext;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -23,7 +23,7 @@ public class KinConfSpringBootApplication {
 
         //测试合并请求
         int testThreadNum = 5;
-        ThreadManager executor = ThreadManager.fix(testThreadNum, "test-");
+        ExecutionContext executor = ExecutionContext.fix(testThreadNum, "test-");
         //镜像不存在的key
         for (int i = 0; i < testThreadNum; i++) {
             int finalI = i;

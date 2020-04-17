@@ -4,7 +4,7 @@ import org.kin.conf.client.domain.ConfDTO;
 import org.kin.conf.client.domain.ServerResponse;
 import org.kin.conf.client.utils.HttpUtils;
 import org.kin.framework.JvmCloseCleaner;
-import org.kin.framework.concurrent.ThreadManager;
+import org.kin.framework.concurrent.ExecutionContext;
 import org.kin.framework.utils.ExceptionUtils;
 import org.kin.framework.utils.JSON;
 import org.kin.framework.utils.StringUtils;
@@ -39,8 +39,8 @@ class ConfDiamond {
     private static Object lock = new Object();
     private static volatile HashSet<String> keyPool = new HashSet<>();
     private static Future<Map<String, String>> future = null;
-    private static ThreadManager EXECUTOR =
-            ThreadManager.fix(5, "diamond-merge-request-", 5, "diamond-merge-request-schedule-");
+    private static ExecutionContext EXECUTOR =
+            ExecutionContext.fix(5, "diamond-merge-request-", 5, "diamond-merge-request-schedule-");
 
     static {
         JvmCloseCleaner.DEFAULT().add(() -> EXECUTOR.shutdown());
