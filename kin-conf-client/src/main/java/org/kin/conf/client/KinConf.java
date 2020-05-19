@@ -3,7 +3,7 @@ package org.kin.conf.client;
 import com.google.common.base.Preconditions;
 import org.kin.conf.client.domain.ConfDTO;
 import org.kin.conf.client.exception.ConfNotExistException;
-import org.kin.framework.concurrent.Keeper;
+import org.kin.framework.concurrent.keeper.Keeper;
 import org.kin.framework.utils.CollectionUtils;
 import org.kin.framework.utils.ExceptionUtils;
 import org.kin.framework.utils.StringUtils;
