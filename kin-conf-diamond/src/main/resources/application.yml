@@ -16,10 +16,10 @@ spring:
 
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://localhost:3306/kin_conf_center?useUnicode=true&autoReconnect=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+    url: jdbc:mysql://localhost:3306/kin_conf_center?useUnicode=true&autoReconnect=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai
     username: root
     password: 123456
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     druid:
       initialSize: 0
       minIdle: 0
@@ -34,7 +34,7 @@ spring:
       testOnBorrow: false
       testOnReturn: false
       # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
-      filters: stat,wall,log4j
+      filters: stat,wall
       validation-query: SELECT 1
     # 数据库有表就不执行
     # 可以定义你的建库文件
@@ -71,8 +71,8 @@ spring:
 
   #格式化输出的json字符串
   jackson:
-      serialization:
-        indent_output: true
+    serialization:
+      indent_output: true
   mvc:
     view:
       suffix: .jsp
