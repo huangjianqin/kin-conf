@@ -1,3 +1,7 @@
+spring:
+  application:
+    name: kin-conf-demo
+
 kin:
   conf:
     appName: kin-conf-demo
