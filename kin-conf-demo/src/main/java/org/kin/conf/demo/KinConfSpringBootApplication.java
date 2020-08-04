@@ -5,6 +5,7 @@ import org.kin.framework.concurrent.ExecutionContext;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 
 /**
  * @author huangjianqin
@@ -12,9 +13,15 @@ import org.springframework.context.ApplicationContext;
  */
 @SpringBootApplication
 public class KinConfSpringBootApplication {
-    public static void main(String[] args) {
-        ApplicationContext context = SpringApplication.run(KinConfSpringConfig.class, args);
+    @Bean
+    public ConfBean conf() {
+        return new ConfBean();
+    }
 
+    public static void main(String[] args) {
+        ApplicationContext context = SpringApplication.run(KinConfSpringBootApplication.class, args);
+
+        System.out.println(KinConf.getAppName());
         System.out.println(KinConf.get("a"));
         System.out.println(KinConf.getBoolean("b"));
         System.out.println(KinConf.getShort("c"));
@@ -36,5 +43,6 @@ public class KinConfSpringBootApplication {
         executor.shutdown();
 
         System.out.println(context.getBean(ConfBean.class));
+        System.exit(0);
     }
 }

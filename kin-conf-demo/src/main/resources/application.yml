@@ -4,7 +4,5 @@ spring:
 
 kin:
   conf:
-    appName: kin-conf-demo
-    diamondAddress: http://localhost:8080
-    env: test
-    mirrorFile: data/mirror.properties
+    client:
+      enable: true

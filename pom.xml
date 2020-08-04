@@ -12,6 +12,8 @@
         <module>kin-conf-client</module>
         <module>kin-conf-diamond</module>
         <module>kin-conf-demo</module>
+        <module>kin-conf-diamond-starter</module>
+        <module>kin-conf-client-starter</module>
     </modules>
 
     <properties>
@@ -21,17 +23,27 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
         <springboot.version>2.3.1.RELEASE</springboot.version>
         <junit.version>4.4</junit.version>
         <kin-framework.version>0.1.0.0</kin-framework.version>
         <mysql-connector-java.version>8.0.19</mysql-connector-java.version>
         <ehcache.version>2.7.0</ehcache.version>
         <druid.version>1.1.9</druid.version>
-        <spring.version>5.2.7.RELEASE</spring.version>
-        <jackson.version>2.10.1</jackson.version>
-        <okhttp.version>4.2.0</okhttp.version>
-        <kin-conf-client.version>0.1.0.0</kin-conf-client.version>
     </properties>
+
+    <!--spring boot基本starter-->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-parent</artifactId>
+                <version>${springboot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -43,12 +55,10 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
         </dependency>
     </dependencies>
 </project>

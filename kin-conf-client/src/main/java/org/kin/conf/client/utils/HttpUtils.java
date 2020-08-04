@@ -1,7 +1,6 @@
 package org.kin.conf.client.utils;
 
 import okhttp3.*;
-import org.jetbrains.annotations.NotNull;
 import org.kin.framework.utils.ExceptionUtils;
 import org.kin.framework.utils.JSON;
 import org.kin.framework.utils.StringUtils;
@@ -37,9 +36,8 @@ public class HttpUtils {
     private static final MediaType MEDIATYPE_JSON = MediaType.get("application/json; charset=utf-8");
 
     private static class LoggingInterceptor implements Interceptor {
-        @NotNull
         @Override
-        public Response intercept(@NotNull Chain chain) throws IOException {
+        public Response intercept(Chain chain) throws IOException {
             Request request = chain.request();
 
             long t1 = System.nanoTime();
@@ -60,7 +58,7 @@ public class HttpUtils {
     }
 
     public static String post(String url, Map<String, Object> params) {
-        RequestBody body = RequestBody.create(converterMap2JsonStr(params), MEDIATYPE_JSON);
+        RequestBody body = RequestBody.create(MEDIATYPE_JSON, converterMap2JsonStr(params));
         Request request = new Request.Builder()
                 .url(url)
                 .post(body)

@@ -12,23 +12,11 @@
     <version>0.1.0.0</version>
     <packaging>jar</packaging>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-parent</artifactId>
-                <version>${springboot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
     <dependencies>
         <dependency>
             <groupId>org.kin</groupId>
-            <artifactId>kin-conf-client</artifactId>
-            <version>${kin-conf-client.version}</version>
+            <artifactId>kin-conf-client-starter</artifactId>
+            <version>${version}</version>
         </dependency>
 
         <dependency>
@@ -45,11 +33,6 @@
                 <directory>${basedir}/src/main/resources</directory>
             </resource>
         </resources>
-        <testResources>
-            <testResource>
-                <directory>${basedir}/src/test/resources</directory>
-            </testResource>
-        </testResources>
 
         <plugins>
             <plugin>
@@ -68,19 +51,6 @@
                 <configuration>
                     <attach>false</attach>
                 </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${springboot.version}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
