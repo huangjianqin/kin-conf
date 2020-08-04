@@ -12,7 +12,6 @@
         <module>kin-conf-client</module>
         <module>kin-conf-diamond</module>
         <module>kin-conf-demo</module>
-        <module>kin-conf-diamond-starter</module>
         <module>kin-conf-client-starter</module>
     </modules>
 
