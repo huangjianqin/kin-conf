@@ -7,8 +7,9 @@ import org.kin.conf.diamond.entity.Conf;
 import org.kin.conf.diamond.entity.ConfMsg;
 import org.kin.framework.concurrent.keeper.Keeper;
 import org.kin.framework.utils.CollectionUtils;
-import org.kin.framework.utils.ExceptionUtils;
 import org.kin.framework.utils.TimeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,8 @@ import java.util.concurrent.TimeUnit;
  */
 @Service
 public class DiamondService implements InitializingBean, DisposableBean {
+    private static final Logger log = LoggerFactory.getLogger(DiamondService.class);
+
     @Autowired
     private ConfDao confDao;
     @Autowired
@@ -128,7 +131,7 @@ public class DiamondService implements InitializingBean, DisposableBean {
                 //清掉无效配置
                 duplicatehelper.clean(confUniqueKeys);
             } catch (Exception e) {
-                ExceptionUtils.log(e);
+                log.error("", e);
             }
 
             try {

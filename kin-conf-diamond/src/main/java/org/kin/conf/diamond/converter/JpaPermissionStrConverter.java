@@ -1,8 +1,9 @@
 package org.kin.conf.diamond.converter;
 
 import org.kin.framework.utils.CollectionUtils;
-import org.kin.framework.utils.ExceptionUtils;
 import org.kin.framework.utils.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.AttributeConverter;
 import java.util.Arrays;
@@ -15,6 +16,7 @@ import java.util.Map;
  * @date 2019/7/22
  */
 public class JpaPermissionStrConverter implements AttributeConverter<Map<String, List<String>>, String> {
+    private static final Logger log = LoggerFactory.getLogger(JpaPermissionStrConverter.class);
 
     @Override
     public String convertToDatabaseColumn(Map<String, List<String>> stringListMap) {
@@ -48,11 +50,11 @@ public class JpaPermissionStrConverter implements AttributeConverter<Map<String,
                         List<String> envs = Arrays.asList(Arrays.copyOfRange(splits, 1, splits.length));
                         result.put(appName, envs);
                     } catch (Exception e) {
-                        ExceptionUtils.log(e);
+                        log.error("", e);
                     }
                 }
             } catch (Exception e) {
-                ExceptionUtils.log(e);
+                log.error("", e);
             }
         }
 

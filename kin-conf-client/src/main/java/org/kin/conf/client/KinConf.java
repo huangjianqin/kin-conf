@@ -5,8 +5,9 @@ import org.kin.conf.client.domain.ConfDTO;
 import org.kin.conf.client.exception.ConfNotExistException;
 import org.kin.framework.concurrent.keeper.Keeper;
 import org.kin.framework.utils.CollectionUtils;
-import org.kin.framework.utils.ExceptionUtils;
 import org.kin.framework.utils.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -16,6 +17,8 @@ import java.util.concurrent.TimeUnit;
  * @date 2019/7/8
  */
 public class KinConf {
+    private static final Logger log = LoggerFactory.getLogger(KinConf.class);
+
     private static String appName;
     private static List<String> diamondAddresses = new ArrayList<>();
     private static String env;
@@ -28,7 +31,7 @@ public class KinConf {
             try {
                 refreshCacheAndMirror();
             } catch (Exception e) {
-                ExceptionUtils.log(e);
+                log.error("", e);
             }
         });
     }

@@ -3,7 +3,8 @@ package org.kin.conf.client.utils;
 import org.kin.conf.client.domain.BeanConfWrapper;
 import org.kin.conf.client.exception.ConfValueTypeErrorException;
 import org.kin.framework.utils.ClassUtils;
-import org.kin.framework.utils.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.context.ApplicationContext;
@@ -16,6 +17,7 @@ import java.beans.PropertyDescriptor;
  * @date 2019/7/19
  */
 public class BeanConfRefreshHelper {
+    private static final Logger log = LoggerFactory.getLogger(BeanConfRefreshHelper.class);
     /**
      * 刷新bean 有@Conf注解的Field
      */
@@ -58,7 +60,7 @@ public class BeanConfRefreshHelper {
                         try {
                             field.set(finalBean, valueObj);        // support mult data types
                         } catch (IllegalAccessException e) {
-                            ExceptionUtils.log(e);
+                            log.error("", e);
                         } catch (Exception e) {
                             throw new ConfValueTypeErrorException(field.getType(), value);
                         }

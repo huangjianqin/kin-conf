@@ -1,7 +1,6 @@
 package org.kin.conf.client.utils;
 
 import okhttp3.*;
-import org.kin.framework.utils.ExceptionUtils;
 import org.kin.framework.utils.JSON;
 import org.kin.framework.utils.StringUtils;
 import org.slf4j.Logger;
@@ -68,7 +67,7 @@ public class HttpUtils {
                 return response.body().string();
             }
         } catch (IOException e) {
-            ExceptionUtils.log(e);
+            log.error("", e);
         }
 
         return null;

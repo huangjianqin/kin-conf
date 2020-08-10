@@ -5,7 +5,6 @@ import org.kin.conf.client.domain.ServerResponse;
 import org.kin.conf.client.utils.HttpUtils;
 import org.kin.framework.JvmCloseCleaner;
 import org.kin.framework.concurrent.ExecutionContext;
-import org.kin.framework.utils.ExceptionUtils;
 import org.kin.framework.utils.JSON;
 import org.kin.framework.utils.StringUtils;
 import org.slf4j.Logger;
@@ -70,7 +69,7 @@ class ConfDiamond {
             try {
                 Thread.sleep(50);
             } catch (InterruptedException e) {
-                ExceptionUtils.log(e);
+                log.error("", e);
             }
         }
         try {
@@ -79,7 +78,7 @@ class ConfDiamond {
                 return new ConfDTO(key, data.get(key));
             }
         } catch (InterruptedException | ExecutionException e) {
-            ExceptionUtils.log(e);
+            log.error("", e);
         }
 
         return null;
@@ -116,7 +115,7 @@ class ConfDiamond {
                     }
                 }
             } catch (Exception e) {
-                ExceptionUtils.log(e);
+                log.error("", e);
             }
         }
         return Collections.emptyMap();
@@ -139,7 +138,7 @@ class ConfDiamond {
                     }
                 }
             } catch (Exception e) {
-                ExceptionUtils.log(e);
+                log.error("", e);
             }
         }
 

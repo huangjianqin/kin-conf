@@ -5,7 +5,6 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalNotification;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.MultimapBuilder;
-import org.kin.framework.utils.ExceptionUtils;
 import org.kin.framework.utils.PropertiesUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +60,7 @@ public class Duplicatehelper implements DisposableBean {
                 return properties;
             });
         } catch (ExecutionException e) {
-            ExceptionUtils.log(e);
+            log.error("", e);
         }
 
         return null;
