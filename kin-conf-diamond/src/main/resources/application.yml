@@ -6,7 +6,6 @@ kin:
 server:
   port: 8080
   tomcat:
-    max-threads: 0
     uri-encoding: UTF-8
 
 spring:
@@ -77,6 +76,7 @@ spring:
     serialization:
       indent_output: true
   mvc:
+    static-path-pattern: /static/**
     view:
       suffix: .jsp
       prefix: /WEB-INF/views/
