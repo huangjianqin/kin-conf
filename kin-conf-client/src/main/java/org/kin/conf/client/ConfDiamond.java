@@ -39,7 +39,7 @@ class ConfDiamond {
     private static volatile HashSet<String> keyPool = new HashSet<>();
     private static Future<Map<String, String>> future = null;
     private static ExecutionContext EXECUTOR =
-            ExecutionContext.fix(5, "diamond-merge-request-", 5, "diamond-merge-request-schedule-");
+            ExecutionContext.fix(5, "diamond-merge-request-", 2, "diamond-merge-request-schedule-");
 
     static {
         JvmCloseCleaner.DEFAULT().add(() -> EXECUTOR.shutdown());
