@@ -42,7 +42,7 @@ public class PermissionInterceptor extends HandlerInterceptorAdapter {
                 //TODO 跳转到登陆页面
             }
             if (needAdmin && !user.isAdmin()) {
-                throw new RuntimeException("权限拦截");
+                throw new IllegalStateException("权限拦截");
             }
         }
 
