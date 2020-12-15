@@ -9,7 +9,6 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessorAdapter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
 import javax.annotation.Nonnull;
@@ -18,7 +17,6 @@ import javax.annotation.Nonnull;
  * @author huangjianqin
  * @date 2019/7/20
  */
-@Component
 public class BeanConfHandler extends InstantiationAwareBeanPostProcessorAdapter implements ApplicationContextAware {
     private ApplicationContext context;
     private BeanConfRefresher beanConfRefresh;

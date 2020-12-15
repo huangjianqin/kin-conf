@@ -1,7 +1,6 @@
 package org.kin.conf.diamond;
 
-import org.kin.conf.diamond.interceptor.CookiesInterceptor;
-import org.kin.conf.diamond.interceptor.PermissionInterceptor;
+import org.kin.conf.diamond.interceptor.PermissionInterceptorImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
@@ -16,9 +15,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class DiamondWebConfig extends SpringBootServletInitializer implements WebMvcConfigurer {
     @Autowired
-    private PermissionInterceptor permissionInterceptor;
-    @Autowired
-    private CookiesInterceptor cookiesInterceptor;
+    private PermissionInterceptorImpl permissionInterceptorImpl;
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
@@ -28,7 +25,6 @@ public class DiamondWebConfig extends SpringBootServletInitializer implements We
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(cookiesInterceptor).addPathPatterns("/**");
-        registry.addInterceptor(permissionInterceptor).addPathPatterns("/**");
+        registry.addInterceptor(permissionInterceptorImpl).addPathPatterns("/**");
     }
 }

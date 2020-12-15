@@ -20,7 +20,7 @@ import javax.annotation.PostConstruct;
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties({KinConfClientProperties.class})
 @ConditionalOnClass(KinConf.class)
-@ConditionalOnProperty(value = "kin.conf.client.enabled", matchIfMissing = true)
+@ConditionalOnProperty(value = "kin.conf.client.enabled", havingValue = "true")
 public class KinConfClientAutoConfiguration {
     private ConfigurableEnvironment environment;
 
