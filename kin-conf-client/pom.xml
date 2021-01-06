@@ -43,25 +43,5 @@
                 <directory>${basedir}/src/test/resources</directory>
             </testResource>
         </testResources>
-
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.6.1</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <encoding>UTF-8</encoding>
-                    <maxmem>1024m</maxmem>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.0.2</version>
-            </plugin>
-        </plugins>
     </build>
 </project>
