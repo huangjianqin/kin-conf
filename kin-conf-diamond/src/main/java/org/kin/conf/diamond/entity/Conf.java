@@ -1,35 +1,28 @@
 package org.kin.conf.diamond.entity;
 
 
-import org.kin.conf.diamond.domain.ConfUniqueKey;
+import com.baomidou.mybatisplus.annotation.TableName;
 
-import javax.persistence.*;
 import java.io.Serializable;
 
 /**
  * @author huangjianqin
  * @date 2019/7/12
  */
-@Entity
-@Table(name = "Conf")
-@IdClass(ConfUniqueKey.class)
+@TableName(autoResultMap = true)
 public class Conf implements Serializable {
-    @Id
-    @Column(columnDefinition = "varchar(100) NOT NULL COMMENT 'Env'")
+    /** 项目应用环境 */
     private String env;
-    @Id
-    @Column(columnDefinition = "varchar(200) NOT NULL COMMENT '配置Key'")
-    private String keyV;
-    @Id
-    @Column(columnDefinition = "varchar(100) NOT NULL COMMENT '所属项目AppName'")
+    /** 配置Key */
+    private String key;
+    /** 所属项目AppName */
     private String appName;
-    @Column(columnDefinition = "varchar(100) NOT NULL COMMENT '配置描述'")
+    /** 配置描述 */
     private String description;
-    @Column(columnDefinition = "varchar(2000) DEFAULT NULL COMMENT '配置Value'")
+    /** 配置Value */
     private String value;
 
     //setter && getter
-
     public String getEnv() {
         return env;
     }
@@ -38,12 +31,12 @@ public class Conf implements Serializable {
         this.env = env;
     }
 
-    public String getKeyV() {
-        return keyV;
+    public String getKey() {
+        return key;
     }
 
-    public void setKeyV(String keyV) {
-        this.keyV = keyV;
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public String getAppName() {

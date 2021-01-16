@@ -1,5 +1,8 @@
 package org.kin.conf.diamond.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.kin.conf.diamond.dao.*;
 import org.kin.conf.diamond.domain.*;
 import org.kin.conf.diamond.entity.*;
@@ -7,16 +10,13 @@ import org.kin.conf.diamond.service.AdminService;
 import org.kin.framework.utils.CollectionUtils;
 import org.kin.framework.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Objects;
 
 /**
  * @author huangjianqin
@@ -38,19 +38,16 @@ public class AdminServiceImpl implements AdminService {
     private DiamondService diamondService;
 
     @Override
-    public ConfListResponse listConf(int offset, String appName, String env) {
+    public ConfListResponse listConf(int page, String appName, String env) {
         ConfListResponse resp = new ConfListResponse();
-        if (offset >= 0 && StringUtils.isNotBlank(appName) && StringUtils.isNotBlank(env)) {
-            long totalCount = confDao.count();
+        if (page > 0 && StringUtils.isNotBlank(appName) && StringUtils.isNotBlank(env)) {
+            long totalCount = confDao.selectCount(null);
 
-            Conf conf = new Conf();
-            conf.setAppName(appName);
-            conf.setEnv(env);
-
-            Example<Conf> example = Example.of(conf);
-            Pageable pageable = PageRequest.of(offset, Constants.DEFAULT_PAGE_SIZE);
-
-            List<Conf> confs = confDao.findAll(example, pageable).getContent();
+            LambdaQueryWrapper<Conf> query =
+                    Wrappers.lambdaQuery(Conf.class)
+                            .eq(Conf::getAppName, appName)
+                            .eq(Conf::getEnv, env);
+            List<Conf> confs = confDao.selectPage(new Page<>(page, Constants.DEFAULT_PAGE_SIZE), query).getRecords();
 
             resp.setTotalCount(totalCount);
             if (CollectionUtils.isNonEmpty(confs)) {
@@ -65,11 +62,11 @@ public class AdminServiceImpl implements AdminService {
         ConfMsg confMsg = new ConfMsg();
         confMsg.setAppName(appName);
         confMsg.setEnv(env);
-        confMsg.setKeyV(key);
+        confMsg.setKey(key);
         confMsg.setValue(value);
         confMsg.setChangeTime(System.currentTimeMillis());
 
-        confMsgDao.save(confMsg);
+        confMsgDao.insert(confMsg);
     }
 
     @Override
@@ -91,18 +88,18 @@ public class AdminServiceImpl implements AdminService {
             return WebResponse.fail("没有权限删除该配置");
         }
 
-        Optional<Conf> confOptional = confDao.findById(new ConfUniqueKey(appName, env, key));
-        if (!confOptional.isPresent()) {
+        ConfUniqueKey pk = new ConfUniqueKey(appName, env, key);
+        Conf conf = confDao.selectById(pk);
+        if (Objects.isNull(conf)) {
             return WebResponse.fail("配置不存在");
         }
-        Conf conf = confOptional.get();
 
-        confDao.delete(conf);
+        confDao.deleteById(pk);
         //log
-        ConfLog confLog = ConfLog.logDelete(conf.getEnv(), conf.getKeyV(), conf.getAppName(), conf.getDescription(), conf.getValue(), user.getAccount());
-        confLogDao.save(confLog);
+        ConfLog confLog = ConfLog.logDelete(conf.getEnv(), conf.getKey(), conf.getAppName(), conf.getDescription(), conf.getValue(), user.getAccount());
+        confLogDao.insert(confLog);
 
-        sendConfMsg(conf.getAppName(), conf.getEnv(), conf.getKeyV(), null);
+        sendConfMsg(conf.getAppName(), conf.getEnv(), conf.getKey(), null);
 
         return WebResponse.success();
     }
@@ -117,7 +114,7 @@ public class AdminServiceImpl implements AdminService {
             return WebResponse.fail("应用名不能为空");
         }
 
-        Project project = projectDao.findById(conf.getAppName()).orElse(null);
+        Project project = projectDao.selectById(conf.getAppName());
         if (project == null) {
             return WebResponse.fail("应用不存在");
         }
@@ -126,7 +123,7 @@ public class AdminServiceImpl implements AdminService {
             return WebResponse.fail("环境不能为空");
         }
 
-        Env env = envDao.findById(conf.getEnv()).orElse(null);
+        Env env = envDao.selectById(conf.getEnv());
         if (env == null) {
             return WebResponse.fail("环境不存在");
         }
@@ -136,12 +133,12 @@ public class AdminServiceImpl implements AdminService {
             return WebResponse.fail("没有权限添加配置");
         }
 
-        if (StringUtils.isBlank(conf.getKeyV())) {
+        if (StringUtils.isBlank(conf.getKey())) {
             return WebResponse.fail("key不能为空");
         }
-        conf.setKeyV(conf.getKeyV().trim());
+        conf.setKey(conf.getKey().trim());
 
-        Conf dbConf = confDao.findById(new ConfUniqueKey(conf.getAppName(), conf.getEnv(), conf.getKeyV())).orElse(null);
+        Conf dbConf = confDao.selectById(new ConfUniqueKey(conf.getAppName(), conf.getEnv(), conf.getKey()));
         if (dbConf != null) {
             return WebResponse.fail("配置已存在, 不能重复添加");
         }
@@ -150,13 +147,13 @@ public class AdminServiceImpl implements AdminService {
             conf.setValue("");
         }
 
-        confDao.save(conf);
+        confDao.insert(conf);
 
         //log
-        ConfLog confLog = ConfLog.logAdd(conf.getEnv(), conf.getKeyV(), conf.getAppName(), conf.getDescription(), conf.getValue(), user.getAccount());
-        confLogDao.save(confLog);
+        ConfLog confLog = ConfLog.logAdd(conf.getEnv(), conf.getKey(), conf.getAppName(), conf.getDescription(), conf.getValue(), user.getAccount());
+        confLogDao.insert(confLog);
 
-        sendConfMsg(conf.getAppName(), conf.getEnv(), conf.getKeyV(), conf.getValue());
+        sendConfMsg(conf.getAppName(), conf.getEnv(), conf.getKey(), conf.getValue());
 
         return WebResponse.success();
     }
@@ -167,7 +164,7 @@ public class AdminServiceImpl implements AdminService {
             return WebResponse.fail("描述不能为空");
         }
 
-        if (StringUtils.isBlank(conf.getKeyV())) {
+        if (StringUtils.isBlank(conf.getKey())) {
             return WebResponse.fail("key不能为空");
         }
 
@@ -184,7 +181,7 @@ public class AdminServiceImpl implements AdminService {
             return WebResponse.fail("没有权限删除该配置");
         }
 
-        Conf dbConf = confDao.findById(new ConfUniqueKey(conf.getAppName(), conf.getEnv(), conf.getKeyV())).orElse(null);
+        Conf dbConf = confDao.selectById(new ConfUniqueKey(conf.getAppName(), conf.getEnv(), conf.getKey()));
         if (dbConf == null) {
             return WebResponse.fail("配置不存在");
         }
@@ -195,13 +192,13 @@ public class AdminServiceImpl implements AdminService {
 
         dbConf.setDescription(conf.getDescription());
         dbConf.setValue(conf.getValue());
-        confDao.save(dbConf);
+        confDao.updateById(dbConf);
 
         //log
-        ConfLog confLog = ConfLog.logUpdate(conf.getEnv(), conf.getKeyV(), conf.getAppName(), conf.getDescription(), conf.getValue(), user.getAccount());
-        confLogDao.save(confLog);
+        ConfLog confLog = ConfLog.logUpdate(conf.getEnv(), conf.getKey(), conf.getAppName(), conf.getDescription(), conf.getValue(), user.getAccount());
+        confLogDao.insert(confLog);
 
-        sendConfMsg(dbConf.getAppName(), dbConf.getEnv(), dbConf.getKeyV(), dbConf.getValue());
+        sendConfMsg(dbConf.getAppName(), dbConf.getEnv(), dbConf.getKey(), dbConf.getValue());
 
         return WebResponse.success();
     }

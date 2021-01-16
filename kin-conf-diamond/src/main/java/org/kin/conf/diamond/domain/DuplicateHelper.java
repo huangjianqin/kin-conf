@@ -24,8 +24,8 @@ import java.util.concurrent.TimeUnit;
  * 应该说是异步刷盘, 有一定延迟, 但大大减少了磁盘IO
  */
 @Service
-public class Duplicatehelper implements DisposableBean {
-    private static final Logger log = LoggerFactory.getLogger(Duplicatehelper.class);
+public class DuplicateHelper implements DisposableBean {
+    private static final Logger log = LoggerFactory.getLogger(DuplicateHelper.class);
 
     /** 副本根目录 */
     @Value("${kin.conf.duplicatePath}")
@@ -38,10 +38,10 @@ public class Duplicatehelper implements DisposableBean {
                     PropertiesUtils.writeFileProperties(notification.getValue(), notification.getKey()))
             .build();
 
-    public Duplicatehelper() {
+    public DuplicateHelper() {
     }
 
-    public Duplicatehelper(String duplicatePath) {
+    public DuplicateHelper(String duplicatePath) {
         this.duplicatePath = duplicatePath;
     }
 

@@ -29,6 +29,7 @@
         <mysql-connector-java.version>8.0.19</mysql-connector-java.version>
         <ehcache.version>2.7.0</ehcache.version>
         <druid.version>1.1.9</druid.version>
+        <mybatis-plus.version>3.4.1</mybatis-plus.version>
     </properties>
 
     <!--spring boot基本starter-->

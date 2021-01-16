@@ -1,13 +1,12 @@
 package org.kin.conf.diamond.dao;
 
 import org.kin.conf.diamond.entity.Env;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.kin.conf.diamond.mapper.EnvMapper;
+import org.kin.framework.mybatis.BaseDao;
 
 /**
  * @author huangjianqin
  * @date 2019/7/12
  */
-@Repository
-public interface EnvDao extends JpaRepository<Env, String> {
+public interface EnvDao extends BaseDao<Env, EnvMapper> {
 }

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
+import java.util.Objects;
 
 /**
  * @author huangjianqin
@@ -41,12 +41,12 @@ public class ProjectController {
             return WebResponse.fail("应用标题不能为空");
         }
 
-        Optional<Project> optional = projectDao.findById(project.getAppName());
-        if (optional.isPresent()) {
+        Project dbProject = projectDao.selectById(project.getAppName());
+        if (Objects.nonNull(dbProject)) {
             return WebResponse.fail("应用已存在");
         }
 
-        projectDao.save(project);
+        projectDao.insert(project);
 
         return WebResponse.success();
     }
@@ -59,14 +59,12 @@ public class ProjectController {
             return WebResponse.fail("应用名不能为空");
         }
 
-        Optional<Project> optional = projectDao.findById(appName);
-        if (!optional.isPresent()) {
+        Project dbProject = projectDao.selectById(appName);
+        if (Objects.isNull(dbProject)) {
             return WebResponse.fail("应用不存在");
         }
 
-        Project dbProject = optional.get();
-
-        projectDao.delete(dbProject);
+        projectDao.deleteById(dbProject);
 
         return WebResponse.success();
     }
@@ -83,14 +81,13 @@ public class ProjectController {
             return WebResponse.fail("应用标题不能为空");
         }
 
-        Optional<Project> optional = projectDao.findById(project.getAppName());
-        if (!optional.isPresent()) {
+        Project dbProject = projectDao.selectById(project.getAppName());
+        if (Objects.isNull(dbProject)) {
             return WebResponse.fail("应用不存在");
         }
 
-        Project dbProject = optional.get();
         dbProject.setTitle(project.getTitle());
-        projectDao.save(dbProject);
+        projectDao.updateById(dbProject);
 
         return WebResponse.success();
     }

@@ -1,13 +1,9 @@
 package org.kin.conf.diamond.dao;
 
 import org.kin.conf.diamond.entity.ConfMsg;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
+import org.kin.conf.diamond.mapper.ConfMsgMapper;
+import org.kin.framework.mybatis.BaseDao;
 
-import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.List;
 
@@ -15,13 +11,16 @@ import java.util.List;
  * @author huangjianqin
  * @date 2019/7/12
  */
-@Repository
-public interface ConfMsgDao extends JpaRepository<ConfMsg, Integer> {
-    @Query("FROM ConfMsg Where id not in (:ids) ORDER BY changeTime")
-    List<ConfMsg> get(@Param("ids") Collection<Integer> ids);
+public interface ConfMsgDao extends BaseDao<ConfMsg, ConfMsgMapper> {
+    /**
+     * 获取操作log消息, 根据changeTime排序(从小到大), 并且排序掉ids
+     *
+     * @param ids 需要排除(exclude)的操作log消息id
+     */
+    List<ConfMsg> get(Collection<Integer> ids);
 
-    @Transactional
-    @Modifying
-    @Query("DELETE FROM ConfMsg WHERE changeTime <= :messageTimeout")
-    int clean(@Param("messageTimeout") long messageTimeout);
+    /**
+     * 清除过期的操作log消息
+     */
+    int clean(long messageTimeout);
 }

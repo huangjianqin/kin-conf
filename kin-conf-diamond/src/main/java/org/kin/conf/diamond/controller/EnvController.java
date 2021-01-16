@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
+import java.util.Objects;
 
 /**
  * @author huangjianqin
@@ -41,12 +41,12 @@ public class EnvController {
             return WebResponse.fail("环境描述不能为空");
         }
 
-        Optional<Env> optional = envDao.findById(env.getEnv());
-        if (optional.isPresent()) {
+        Env dbEnv = envDao.selectById(env.getEnv());
+        if (Objects.nonNull(dbEnv)) {
             return WebResponse.fail("环境已存在");
         }
 
-        envDao.save(env);
+        envDao.insert(env);
 
         return WebResponse.success();
     }
@@ -59,14 +59,12 @@ public class EnvController {
             return WebResponse.fail("环境不能为空");
         }
 
-        Optional<Env> optional = envDao.findById(env);
-        if (!optional.isPresent()) {
+        Env dbEnv = envDao.selectById(env);
+        if (Objects.isNull(dbEnv)) {
             return WebResponse.fail("环境不存在");
         }
 
-        Env dbEnv = optional.get();
-
-        envDao.delete(dbEnv);
+        envDao.deleteById(dbEnv);
 
         return WebResponse.success();
     }
@@ -83,16 +81,15 @@ public class EnvController {
             return WebResponse.fail("环境描述不能为空");
         }
 
-        Optional<Env> optional = envDao.findById(env.getEnv());
-        if (!optional.isPresent()) {
+        Env dbEnv = envDao.selectById(env.getEnv());
+        if (Objects.isNull(dbEnv)) {
             return WebResponse.fail("环境不存在");
         }
 
-        Env dbEnv = optional.get();
         dbEnv.setDescription(env.getDescription());
         dbEnv.setTorder(env.getTorder());
 
-        envDao.save(dbEnv);
+        envDao.updateById(dbEnv);
 
         return WebResponse.success();
     }

@@ -1,13 +1,12 @@
 package org.kin.conf.diamond.dao;
 
 import org.kin.conf.diamond.entity.Project;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.kin.conf.diamond.mapper.ProjectMapper;
+import org.kin.framework.mybatis.BaseDao;
 
 /**
  * @author huangjianqin
  * @date 2019/7/12
  */
-@Repository
-public interface ProjectDao extends JpaRepository<Project, String> {
+public interface ProjectDao extends BaseDao<Project, ProjectMapper> {
 }

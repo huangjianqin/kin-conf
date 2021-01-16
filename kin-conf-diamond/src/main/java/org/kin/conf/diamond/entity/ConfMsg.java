@@ -1,32 +1,29 @@
 package org.kin.conf.diamond.entity;
 
-import javax.persistence.*;
+import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
 
 /**
  * @author huangjianqin
  * @date 2019/7/12
  */
-@Entity
-@Table(name = "ConfMsg")
+@TableName(autoResultMap = true)
 public class ConfMsg implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(columnDefinition = "int(11) NOT NULL AUTO_INCREMENT")
+    /** id */
     private int id;
-    @Column(columnDefinition = "bigint(11) NOT NULL")
+    /** 配置变化时间 */
     private long changeTime;
-    @Column(columnDefinition = "varchar(100) NOT NULL COMMENT '所属项目AppName'")
+    /** 所属项目AppName */
     private String appName;
-    @Column(columnDefinition = "varchar(100) NOT NULL COMMENT 'Env'")
+    /** 项目应用环境 */
     private String env;
-    @Column(columnDefinition = "varchar(200) NOT NULL COMMENT '配置Key'")
-    private String keyV;
-    @Column(columnDefinition = "varchar(2000) DEFAULT NULL COMMENT '配置Value'")
+    /** 配置Key */
+    private String key;
+    /** 配置Value */
     private String value;
 
     //setter && getter
-
     public int getId() {
         return id;
     }
@@ -59,12 +56,12 @@ public class ConfMsg implements Serializable {
         this.env = env;
     }
 
-    public String getKeyV() {
-        return keyV;
+    public String getKey() {
+        return key;
     }
 
-    public void setKeyV(String keyV) {
-        this.keyV = keyV;
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public String getValue() {

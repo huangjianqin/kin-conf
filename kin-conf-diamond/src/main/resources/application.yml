@@ -48,28 +48,7 @@ spring:
     # 每次都初始化
 #    initialization-mode: always
 
-  #hibernate
-  jpa:
-    database: MYSQL
-    # Hibernate ddl auto (create, create-drop, update)
-    hibernate:
-      ddl-auto: none
-      # Naming strategy
-      # 会把驼峰写法用_拆分
-      # naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
-      naming:
-        # 会把驼峰写法用_拆分
-        # physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
-        # 直接映射
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect  #不加这句则默认为myisam引擎
-    #打印sql语句
-    show-sql: false
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL5Dialect
-        #hibernate配置
-        current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+  #mybatis
 
   #格式化输出的json字符串
   jackson:

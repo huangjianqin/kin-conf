@@ -15,7 +15,7 @@ import org.springframework.util.DigestUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigInteger;
-import java.util.Optional;
+import java.util.Objects;
 
 /**
  * @author huangjianqin
@@ -51,12 +51,11 @@ public class UserServiceImpl implements UserService {
             return WebResponse.fail("密码不能为空");
         }
 
-        Optional<User> optional = userDao.findById(account);
-        if (!optional.isPresent()) {
+        User dbUser = userDao.selectById(account);
+        if (Objects.isNull(dbUser)) {
             return WebResponse.fail("用户不存在");
         }
 
-        User dbUser = optional.get();
         password = DigestUtils.md5DigestAsHex(password.getBytes());
         if (!dbUser.getPassword().equals(password)) {
             return WebResponse.fail("密码错误");
@@ -71,18 +70,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUser(HttpServletRequest request) {
         String cookieToken = CookieUtils.getValue(request, CookieKey.LOGIN_IDENTITY);
-        if (cookieToken != null) {
-            User user = parseToken(cookieToken);
-            if (user != null) {
-                Optional<User> optional = userDao.findById(user.getAccount());
-                if (optional.isPresent()) {
-                    User dbUser = optional.get();
-                    if (user.getPassword().equals(dbUser.getPassword())) {
-                        return user;
-                    }
-                }
-            }
+        if (StringUtils.isBlank(cookieToken)) {
+            return null;
         }
+        User user = parseToken(cookieToken);
+        if (Objects.isNull(user)) {
+            return null;
+        }
+
+        User dbUser = userDao.selectById(user.getAccount());
+        if (Objects.nonNull(dbUser) && user.getPassword().equals(dbUser.getPassword())) {
+            return user;
+        }
+
         return null;
     }
 }

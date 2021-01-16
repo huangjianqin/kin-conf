@@ -1,5 +1,8 @@
 package org.kin.conf.diamond.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.kin.conf.diamond.dao.ConfDao;
 import org.kin.conf.diamond.dao.ConfMsgDao;
 import org.kin.conf.diamond.domain.*;
@@ -14,8 +17,6 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
@@ -37,7 +38,7 @@ public class DiamondService implements InitializingBean, DisposableBean {
     @Autowired
     private ConfMsgDao confMsgDao;
     @Autowired
-    private Duplicatehelper duplicatehelper;
+    private DuplicateHelper duplicatehelper;
 
     /** 副本同步间隔 */
     @Value("${kin.conf.duplicateInterval}")
@@ -64,8 +65,8 @@ public class DiamondService implements InitializingBean, DisposableBean {
             if (CollectionUtils.isNonEmpty(readedMsgIds)) {
                 confMsgs = confMsgDao.get(readedMsgIds);
             } else {
-                Sort sort = Sort.by("changeTime");
-                confMsgs = confMsgDao.findAll(sort);
+                LambdaQueryWrapper<ConfMsg> query = Wrappers.lambdaQuery(ConfMsg.class).orderByAsc(ConfMsg::getChangeTime);
+                confMsgs = confMsgDao.selectList(query);
             }
 
             if (CollectionUtils.isNonEmpty(confMsgs)) {
@@ -77,9 +78,9 @@ public class DiamondService implements InitializingBean, DisposableBean {
                     }
 
                     //同步到磁盘
-                    duplicatehelper.set(confMsg.getAppName(), confMsg.getEnv(), confMsg.getKeyV(), confMsg.getValue());
+                    duplicatehelper.set(confMsg.getAppName(), confMsg.getEnv(), confMsg.getKey(), confMsg.getValue());
 
-                    List<DeferredResult<WebResponse<String>>> deferredResults = MonitorData.remove(confMsg.getAppName(), confMsg.getEnv(), confMsg.getKeyV());
+                    List<DeferredResult<WebResponse<String>>> deferredResults = MonitorData.remove(confMsg.getAppName(), confMsg.getEnv(), confMsg.getKey());
                     if (CollectionUtils.isNonEmpty(deferredResults)) {
                         for (DeferredResult<WebResponse<String>> deferredResult : deferredResults) {
                             deferredResult.setResult(WebResponse.success("monitor key update"));
@@ -113,19 +114,22 @@ public class DiamondService implements InitializingBean, DisposableBean {
             }
 
             try {
-                int offset = 0;
+                //页数
+                int pageId = 0;
                 int pageSize = Constants.DEFAULT_PAGE_SIZE;
 
                 List<Conf> confs;
                 List<ConfUniqueKey> confUniqueKeys = new ArrayList<>();
-                while (CollectionUtils.isNonEmpty((confs = confDao.findAll(PageRequest.of(offset, pageSize)).getContent()))) {
+                Page<Conf> page = new Page<>(pageId, pageSize);
+                while (CollectionUtils.isNonEmpty((confs = confDao.selectPage(page, null).getRecords()))) {
                     for (Conf conf : confs) {
                         //同步到磁盘
-                        duplicatehelper.set(conf.getAppName(), conf.getEnv(), conf.getKeyV(), conf.getValue());
+                        duplicatehelper.set(conf.getAppName(), conf.getEnv(), conf.getKey(), conf.getValue());
 
-                        confUniqueKeys.add(new ConfUniqueKey(conf.getAppName(), conf.getEnv(), conf.getKeyV()));
+                        confUniqueKeys.add(new ConfUniqueKey(conf.getAppName(), conf.getEnv(), conf.getKey()));
                     }
-                    offset += pageSize;
+                    pageId += 1;
+                    page = new Page<>(pageId, pageSize);
                 }
 
                 //清掉无效配置

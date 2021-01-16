@@ -17,12 +17,12 @@ public interface AdminService {
     /**
      * 获取配置
      *
-     * @param offset  offset
+     * @param page    page 第n页
      * @param appName appName
      * @param env     环境
      * @return 配置列表
      */
-    ConfListResponse listConf(int offset, String appName, String env);
+    ConfListResponse listConf(int page, String appName, String env);
 
     /**
      * 删除配置

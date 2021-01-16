@@ -1,13 +1,12 @@
 package org.kin.conf.diamond.dao;
 
 import org.kin.conf.diamond.entity.ConfLog;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.kin.conf.diamond.mapper.ConfLogMapper;
+import org.kin.framework.mybatis.BaseDao;
 
 /**
  * @author huangjianqin
  * @date 2019/7/12
  */
-@Repository
-public interface ConfLogDao extends JpaRepository<ConfLog, Integer> {
+public interface ConfLogDao extends BaseDao<ConfLog, ConfLogMapper> {
 }
