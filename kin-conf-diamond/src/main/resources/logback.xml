@@ -38,11 +38,6 @@
         </rollingPolicy>
     </appender>
 
-    <!--                                       logger                                                       -->
-    <logger name="error" level="WARN" additivity="false">
-        <appender-ref ref="ERROR"/>
-    </logger>
-
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="STDOUT"/>
