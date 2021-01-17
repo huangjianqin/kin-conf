@@ -46,7 +46,7 @@ spring:
     # 有了错误是否继续运行
 #    continueOnError: false
     # 每次都初始化
-    initialization-mode: always
+#    initialization-mode: always
 
   #mybatis
 
