@@ -1,5 +1,6 @@
 package org.kin.conf.diamond.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.io.Serializable;
@@ -19,8 +20,10 @@ public class ConfMsg implements Serializable {
     /** 项目应用环境 */
     private String env;
     /** 配置Key */
+    @TableField(value = "k")
     private String key;
     /** 配置Value */
+    @TableField(value = "v")
     private String value;
 
     //setter && getter

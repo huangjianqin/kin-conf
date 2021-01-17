@@ -11,13 +11,13 @@ CREATE TABLE `conf`
         COMMENT '所属项目AppName',
     `env`         VARCHAR(100) NOT NULL
         COMMENT 'Env',
-    `key`         VARCHAR(200) NOT NULL
+    `k` VARCHAR(200) NOT NULL
         COMMENT '配置Key',
     `description` VARCHAR(100) NOT NULL
         COMMENT '配置描述',
-    `value`       VARCHAR(2000) DEFAULT NULL
+    `v` VARCHAR(2000) DEFAULT NULL
         COMMENT '配置Value',
-    PRIMARY KEY (`app_name`, `env`, `key_v`)
+    PRIMARY KEY (`app_name`, `env`, `k`)
 )
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
@@ -31,7 +31,7 @@ CREATE TABLE `conf_log`
         COMMENT '配置描述',
     `env`          VARCHAR(100) NOT NULL
         COMMENT 'Env',
-    `key`          VARCHAR(200) NOT NULL
+    `k` VARCHAR(200) NOT NULL
         COMMENT '配置Key',
     `log_time`     BIGINT(11)   NOT NULL
         COMMENT '操作时间',
@@ -39,8 +39,8 @@ CREATE TABLE `conf_log`
         COMMENT '操作类型',
     `operator`     VARCHAR(100) NOT NULL
   COMMENT '操作人',
-    `value`        VARCHAR(2000)         DEFAULT NULL
-  COMMENT '配置Value',
+    `v` VARCHAR(2000) DEFAULT NULL
+        COMMENT '配置Value',
     PRIMARY KEY (`id`)
 )
   ENGINE = InnoDB
@@ -54,9 +54,9 @@ CREATE TABLE `conf_msg`
     `change_time` BIGINT(11)   NOT NULL,
     `env`         VARCHAR(100) NOT NULL
         COMMENT 'Env',
-    `key`         VARCHAR(200) NOT NULL
+    `k` VARCHAR(200) NOT NULL
         COMMENT '配置Key',
-    `value`       VARCHAR(2000) DEFAULT NULL
+    `v` VARCHAR(2000) DEFAULT NULL
         COMMENT '配置Value',
     PRIMARY KEY (`id`)
 )

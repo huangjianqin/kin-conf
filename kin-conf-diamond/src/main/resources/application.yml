@@ -42,11 +42,11 @@ spring:
     # 可以定义你的建库文件
     schema: classpath:db/schema.sql
     # 可以定义你的数据文件
-    data: classpath:db/data.sql
+#    data: classpath:db/data.sql
     # 有了错误是否继续运行
 #    continueOnError: false
     # 每次都初始化
-#    initialization-mode: always
+    initialization-mode: always
 
   #mybatis
 
