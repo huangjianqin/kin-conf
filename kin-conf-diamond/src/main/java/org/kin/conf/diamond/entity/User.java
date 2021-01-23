@@ -1,6 +1,7 @@
 package org.kin.conf.diamond.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import org.kin.conf.diamond.converter.PermissionDataTypeHandler;
 import org.kin.conf.diamond.domain.Constants;
@@ -19,6 +20,7 @@ import java.util.Map;
 @TableName(autoResultMap = true)
 public class User implements Serializable {
     /** 账号 */
+    @TableId
     private String account;
     /** 密码 */
     private String password;

@@ -1,5 +1,6 @@
 package org.kin.conf.diamond.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.io.Serializable;
@@ -11,6 +12,7 @@ import java.io.Serializable;
 @TableName(autoResultMap = true)
 public class Env implements Serializable {
     /** 项目应用环境 */
+    @TableId
     private String env;
     /** 环境描述 */
     private String description;

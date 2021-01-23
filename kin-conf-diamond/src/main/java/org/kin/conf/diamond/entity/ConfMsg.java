@@ -12,9 +12,9 @@ import java.io.Serializable;
 @TableName(autoResultMap = true)
 public class ConfMsg implements Serializable {
     /** id */
-    private int id;
+    private Integer id;
     /** 配置变化时间 */
-    private long changeTime;
+    private Long changeTime;
     /** 所属项目AppName */
     private String appName;
     /** 项目应用环境 */
@@ -27,19 +27,19 @@ public class ConfMsg implements Serializable {
     private String value;
 
     //setter && getter
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public long getChangeTime() {
+    public Long getChangeTime() {
         return changeTime;
     }
 
-    public void setChangeTime(long changeTime) {
+    public void setChangeTime(Long changeTime) {
         this.changeTime = changeTime;
     }
 

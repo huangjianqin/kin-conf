@@ -87,18 +87,13 @@ CREATE TABLE `project`
     ENGINE = InnoDB
     DEFAULT CHARSET = utf8;
 
-CREATE TABLE `User` (
-                        `account`        VARCHAR(100) NOT NULL
-  COMMENT '账号',
-                        `name`           VARCHAR(100) NOT NULL
-  COMMENT '用户名',
-                        `password`       VARCHAR(100) NOT NULL
-  COMMENT '密码',
-                        `permission`     TINYINT(4)   NOT NULL DEFAULT '0'
-  COMMENT '权限：0-普通用户、1-管理员',
-                        `permission_data` VARCHAR(1000) DEFAULT NULL
-                            COMMENT '权限配置数据',
-                        PRIMARY KEY (account)
+CREATE TABLE `User`(
+                       `account`         VARCHAR(100) NOT NULL COMMENT '账号',
+                       `name`            VARCHAR(100) NOT NULL COMMENT '用户名',
+                       `password`        VARCHAR(100) NOT NULL COMMENT '密码',
+                       `permission`      TINYINT(4)   NOT NULL DEFAULT '0' COMMENT '权限：0-普通用户、1-管理员',
+                       `permission_data` VARCHAR(1000)         DEFAULT NULL COMMENT '权限配置数据',
+                       PRIMARY KEY (account)
 )
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8;

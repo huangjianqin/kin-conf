@@ -16,7 +16,7 @@ public class ConfLog implements Serializable {
     private static final int DELETE_OPR = 3;
 
     /** id */
-    private int id;
+    private Integer id;
     /** 项目应用环境 */
     private String env;
     /** 配置Key */
@@ -63,12 +63,11 @@ public class ConfLog implements Serializable {
     }
 
     //setter && getter
-
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
