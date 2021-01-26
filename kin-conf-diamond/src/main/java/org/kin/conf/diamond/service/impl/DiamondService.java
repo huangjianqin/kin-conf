@@ -8,7 +8,7 @@ import org.kin.conf.diamond.dao.ConfMsgDao;
 import org.kin.conf.diamond.domain.*;
 import org.kin.conf.diamond.entity.Conf;
 import org.kin.conf.diamond.entity.ConfMsg;
-import org.kin.framework.concurrent.keeper.Keeper;
+import org.kin.framework.concurrent.Keeper;
 import org.kin.framework.utils.CollectionUtils;
 import org.kin.framework.utils.TimeUtils;
 import org.slf4j.Logger;
