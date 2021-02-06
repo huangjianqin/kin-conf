@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# app name
+app_name=Kin-Conf-Diamond
 # 指定运行脚本user
 app_user=bigdata1
 
@@ -31,3 +33,7 @@ if [ "${current_user}" = "root" ]; then
 else
   `$cmd`
 fi
+
+current_path=$(dirname $0)
+echo $! >"${current_path}"/app.pid
+echo "${app_name} started"
