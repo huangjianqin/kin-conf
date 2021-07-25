@@ -38,6 +38,6 @@ class ConfMirror {
     static void writeMirror(Map<String, String> confs) {
         Properties properties = new Properties();
         properties.putAll(confs);
-        PropertiesUtils.writeFileProperties(properties, KinConf.getMirrorFile());
+        PropertiesUtils.writeProperties(properties, KinConf.getMirrorFile());
     }
 }

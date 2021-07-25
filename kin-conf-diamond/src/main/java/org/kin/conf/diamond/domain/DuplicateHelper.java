@@ -35,7 +35,7 @@ public class DuplicateHelper implements DisposableBean {
             //最近一次访问10s后, 失效, flush到磁盘
             .expireAfterAccess(10, TimeUnit.SECONDS)
             .removalListener((RemovalNotification<String, Properties> notification) ->
-                    PropertiesUtils.writeFileProperties(notification.getValue(), notification.getKey()))
+                    PropertiesUtils.writeProperties(notification.getValue(), notification.getKey()))
             .build();
 
     public DuplicateHelper() {
