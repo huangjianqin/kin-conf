@@ -48,20 +48,10 @@
 
             <dependency>
                 <groupId>org.kin</groupId>
-                <artifactId>kin-conf-client</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.kin</groupId>
-                <artifactId>kin-conf-client-starter</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.kin</groupId>
-                <artifactId>kin-conf-diamond</artifactId>
-                <version>${project.version}</version>
+                <artifactId>kin-framework-bom</artifactId>
+                <version>${kin-framework.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -70,7 +60,6 @@
         <dependency>
             <groupId>org.kin</groupId>
             <artifactId>kin-framework-java</artifactId>
-            <version>${kin-framework.version}</version>
         </dependency>
         <!-- jackson-->
         <dependency>
