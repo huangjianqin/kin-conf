@@ -8,6 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @ConfigurationProperties("kin.conf.client")
 public class KinConfClientProperties {
+
     private String diamondAddress = "http://localhost:8080";
     private String env = "test";
     private String mirrorFile = "data/mirror.properties";
