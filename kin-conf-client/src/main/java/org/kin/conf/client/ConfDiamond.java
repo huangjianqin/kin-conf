@@ -42,7 +42,7 @@ class ConfDiamond {
             ExecutionContext.fix(5, "diamond-merge-request-", 2, "diamond-merge-request-schedule-");
 
     static {
-        JvmCloseCleaner.common().add(() -> EXECUTOR.shutdown());
+        JvmCloseCleaner.instance().add(() -> EXECUTOR.shutdown());
     }
 
     /**
