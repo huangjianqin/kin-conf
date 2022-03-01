@@ -15,7 +15,7 @@
         <dependency>
             <groupId>org.kin</groupId>
             <artifactId>kin-conf-client-starter</artifactId>
-            <version>${version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
@@ -23,14 +23,4 @@
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
     </dependencies>
-
-    <build>
-        <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
-        <testSourceDirectory>${basedir}/src/test/java</testSourceDirectory>
-        <resources>
-            <resource>
-                <directory>${basedir}/src/main/resources</directory>
-            </resource>
-        </resources>
-    </build>
 </project>
