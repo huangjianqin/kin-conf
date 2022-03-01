@@ -64,8 +64,8 @@
 
         <dependency>
             <groupId>org.kin</groupId>
-            <artifactId>kin-framework-web</artifactId>
-            <version>0.1.0.0</version>
+            <artifactId>kin-framework-web-common</artifactId>
+            <version>${kin-framework-web.version}</version>
         </dependency>
     </dependencies>
 
