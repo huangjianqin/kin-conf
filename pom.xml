@@ -27,7 +27,8 @@
 
         <springboot.version>2.5.0</springboot.version>
         <junit.version>4.4</junit.version>
-        <kin-framework.version>0.1.0.0</kin-framework.version>
+        <kin-framework-java.version>0.1.0.0</kin-framework-java.version>
+        <kin-framework-dependencies.version>0.1.0.0</kin-framework-dependencies.version>
         <kin-framework-web.version>0.1.0.0</kin-framework-web.version>
         <mysql-connector-java.version>8.0.19</mysql-connector-java.version>
         <ehcache.version>2.7.0</ehcache.version>
@@ -49,16 +50,14 @@
 
             <dependency>
                 <groupId>org.kin</groupId>
-                <artifactId>kin-framework-bom</artifactId>
-                <version>${kin-framework.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
+                <artifactId>kin-framework-java</artifactId>
+                <version>${kin-framework-java.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.kin</groupId>
                 <artifactId>kin-framework-dependencies</artifactId>
-                <version>${kin-framework.version}</version>
+                <version>${kin-framework-dependencies.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
